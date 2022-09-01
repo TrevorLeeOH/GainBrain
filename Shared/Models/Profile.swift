@@ -41,6 +41,13 @@ struct Profile: Identifiable, Codable, Hashable {
         return profiles
     }
     
+    static func getProfile(id: UUID) throws -> Profile {
+        do {
+            let url = try getProfileDirectory().appendingPathComponent(id.uuidString)
+            return try load(url: url)
+        }
+    }
+    
     static func load(url: URL) throws -> Profile {
         let decoder = JSONDecoder()
         let profileData: Data = try Data(contentsOf: url)

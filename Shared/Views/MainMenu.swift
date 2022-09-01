@@ -19,11 +19,9 @@ struct MainMenu: View {
                     .font(.largeTitle)
                     .bold()
                 
-                
                 Spacer()
                 
                 VStack(spacing: 32) {
-                    
                     
                     MainMenuItemView(view: AnyView(NavigationLink(destination: CreateWorkoutView().navigationTitle("Create New Workout")) {
                         Text("Start Workout")
@@ -75,11 +73,6 @@ struct MainMenuItemView: View {
 
 
 
-struct MainMenu_Previews: PreviewProvider {
-    static var previews: some View {
-        MainMenu()
-    }
-}
 
 
 

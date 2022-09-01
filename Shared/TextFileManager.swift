@@ -66,8 +66,6 @@ struct TextFileCreateView: View {
     }
 }
 
-
-
 struct TextFileMultiSelectionView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.editMode) var editMode
@@ -79,6 +77,8 @@ struct TextFileMultiSelectionView: View {
     
     @Binding var selection: [String]
     @State private var listSelection: Set<String> = Set<String>()
+    
+    @State private var filter: String = ""
     
     @State private var sheetIsActive: Bool = false
     
@@ -93,8 +93,16 @@ struct TextFileMultiSelectionView: View {
     
     var body: some View {
         List(selection: $listSelection) {
+            Section {
+                HStack {
+                    Image(systemName: "magnifyingglass").opacity(0.3)
+                    TextField("Filter", text: $filter)
+                }
+            }
             ForEach(options, id: \.self) { option in
-                Text(option)
+                if (filter == "" || option.contains(filter)) {
+                    Text(option)
+                }
             }
             .onMove { indexSet, index in
                 options.move(fromOffsets: indexSet, toOffset: index)
@@ -107,23 +115,27 @@ struct TextFileMultiSelectionView: View {
             }
         }
         .toolbar {
-            ToolbarItem(placement: .bottomBar) {
-                Button(creationPrompt) {
-                    sheetIsActive = true
-                }
-            }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Delete", role: .destructive) {
-                    for option in options {
-                        if listSelection.contains(option) {
-                            do {
-                                try TextFileManager.delete(at: url, entry: option)
-                            } catch {
-                                print(error.localizedDescription)
+                if listSelection.count > 0 {
+                    Button("Delete") {
+                        for option in options {
+                            if listSelection.contains(option) {
+                                do {
+                                    try TextFileManager.delete(at: url, entry: option)
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
                             }
                         }
+                        refresh()
                     }
-                    refresh()
+                    .foregroundColor(Color(uiColor: .systemRed))
+                }
+                
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Create") {
+                    sheetIsActive = true
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -155,6 +167,8 @@ struct TextFilePickerView: View {
     
     @Binding var selection: String
     
+    @State var filter: String = ""
+    
     @State private var sheetIsActive: Bool = false
     
     private func refresh() {
@@ -168,10 +182,19 @@ struct TextFilePickerView: View {
     
     var body: some View {
         List {
+            Section {
+                HStack {
+                    Image(systemName: "magnifyingglass").opacity(0.3)
+                    TextField("Filter", text: $filter)
+                }
+            }
+            
             ForEach(options, id: \.self) { option in
-                Button(option) {
-                    selection = option
-                    dismiss()
+                if filter == "" || option.contains(filter) {
+                    Button(option) {
+                        selection = option
+                        dismiss()
+                    }
                 }
             }
             .onMove { indexSet, index in
@@ -194,9 +217,10 @@ struct TextFilePickerView: View {
                 refresh()
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .bottomBar) {
-                Button("Create new " + subject) {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Create") {
                     sheetIsActive = true
                 }
             }

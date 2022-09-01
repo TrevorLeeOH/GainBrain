@@ -11,6 +11,8 @@ struct WeightLifting: Codable, Hashable {
     var type: String
     var tags: [String]
     var sets: [WeightLiftingSet]
+    var weightAsOffset: Bool
+    var individualWeight: Bool
     
     static func getTypeUrl() -> URL {
         let url: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("WeightLiftingTypes.txt")
@@ -44,7 +46,7 @@ class WeightLiftingBuilder: ObservableObject {
     }
     
     public func toStruct() -> WeightLifting {
-        return WeightLifting(type: type, tags: tags, sets: sets)
+        return WeightLifting(type: type, tags: tags, sets: sets, weightAsOffset: weightAsOffset, individualWeight: individualWeight)
     }
     
 }

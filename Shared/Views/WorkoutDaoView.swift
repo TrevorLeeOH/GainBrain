@@ -278,7 +278,9 @@ struct WorkoutDetailedView: View {
     var body: some View {
         List {
             Section(header: Text("Weight-Lifting")) {
-                
+                ForEach(workout.weight_lifting, id: \.self) { weightLifting in
+                    WeightLiftingStructMinimalView(weightLifting: weightLifting)
+                }
             }
             
             Section(header: Text("Cardio")) {
@@ -305,13 +307,71 @@ struct WorkoutDetailedView: View {
 }
 
 
+struct WeightLiftingStructMinimalView: View {
+    var weightLifting: WeightLifting
+    
+    var body: some View {
+        NavigationLink(destination: WeightLiftingStructDetailedView(weightLifting: weightLifting)) {
+            HStack {
+                Text(weightLifting.type)
+                Spacer()
+                ForEach(weightLifting.sets) { wSet in
+                    VStack {
+                        Text(String(wSet.reps))
+                        Text(String((weightLifting.weightAsOffset && wSet.weight >= 0 ? "+" : "") + String(wSet.weight)))
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct WeightLiftingStructDetailedView: View {
+    var weightLifting: WeightLifting
+    
+    var columns = [
+        GridItem(.flexible(minimum: 0.0, maximum: .infinity), spacing: 0.0),
+        GridItem(.flexible(minimum: 0.0, maximum: .infinity), spacing: 0.0)
+    ]
+    
+    var body: some View {
+        List {
+            LazyVGrid(columns: columns, spacing: 0.0) {
+                Text("Reps")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .border(.black, width: 2.0)
+                Text("Weight")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .border(.black, width: 2.0)
+                ForEach(weightLifting.sets) { wSet in
+                    Text(String(wSet.reps))
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .border(.gray, width: 1.0)
+                    Text(String(wSet.weight))
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .border(.gray, width: 1.0)
+                    
+                }
+            }
+            HStack {
+                Text("Individual Weight?")
+                Text(weightLifting.individualWeight ? "Yes" : "No").opacity(0.5)
+            }
+        }
+        .navigationBarTitle(weightLifting.type)
+    }
+}
+
+
 struct WorkoutStatisticsView: View {
     var body: some View {
         EmptyView()
     }
 }
-
-
 
 
 extension Double {
@@ -334,6 +394,10 @@ extension Double {
             dur -= 1
         }
         
-        return String(hours) + " hrs, " + String(minutes) + " min, " + String(seconds) + " sec";
+        let hoursStr = hours > 0 ? String(hours) + " hrs, " : ""
+        let minutesStr = minutes > 0 ? String(hours) + " min, " : ""
+        let secondsStr = String(seconds) + " sec"
+        
+        return hoursStr + minutesStr + secondsStr;
     }
 }

@@ -17,10 +17,16 @@
 		695FE6F0287DAC3A00966B97 /* WorkoutDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695FE6EE287DAC3A00966B97 /* WorkoutDao.swift */; };
 		696F5B7428837C78004CE108 /* TextFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696F5B7328837C78004CE108 /* TextFileManager.swift */; };
 		696F5B7528837C78004CE108 /* TextFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696F5B7328837C78004CE108 /* TextFileManager.swift */; };
-		699ED6882880E9AB00C47D6E /* WorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699ED6872880E9AB00C47D6E /* WorkoutView.swift */; };
-		699ED6892880E9AB00C47D6E /* WorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699ED6872880E9AB00C47D6E /* WorkoutView.swift */; };
+		699ED6882880E9AB00C47D6E /* WorkoutBuilderViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699ED6872880E9AB00C47D6E /* WorkoutBuilderViews.swift */; };
+		699ED6892880E9AB00C47D6E /* WorkoutBuilderViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699ED6872880E9AB00C47D6E /* WorkoutBuilderViews.swift */; };
 		69C33F002881B9BC000CFFED /* CodableColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C33EFF2881B9BC000CFFED /* CodableColor.swift */; };
 		69C33F012881B9BC000CFFED /* CodableColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C33EFF2881B9BC000CFFED /* CodableColor.swift */; };
+		69CAB8FA28C15E64005ABD66 /* CardioViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8F928C15E64005ABD66 /* CardioViews.swift */; };
+		69CAB8FB28C15E64005ABD66 /* CardioViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8F928C15E64005ABD66 /* CardioViews.swift */; };
+		69CAB8FD28C15EB1005ABD66 /* WeightLiftingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8FC28C15EB1005ABD66 /* WeightLiftingViews.swift */; };
+		69CAB8FE28C15EB1005ABD66 /* WeightLiftingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8FC28C15EB1005ABD66 /* WeightLiftingViews.swift */; };
+		69CAB90028C15F84005ABD66 /* ProfileViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8FF28C15F84005ABD66 /* ProfileViews.swift */; };
+		69CAB90128C15F84005ABD66 /* ProfileViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8FF28C15F84005ABD66 /* ProfileViews.swift */; };
 		69D126A8289EE48500C7DCA9 /* WorkoutDaoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D126A7289EE48500C7DCA9 /* WorkoutDaoView.swift */; };
 		69D126A9289EE48500C7DCA9 /* WorkoutDaoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D126A7289EE48500C7DCA9 /* WorkoutDaoView.swift */; };
 		69DEAB35287C691200410576 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69DEAB34287C691200410576 /* Tests_iOS.swift */; };
@@ -64,8 +70,11 @@
 		694DAAF1287F804200E31FD1 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		695FE6EE287DAC3A00966B97 /* WorkoutDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDao.swift; sourceTree = "<group>"; };
 		696F5B7328837C78004CE108 /* TextFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFileManager.swift; sourceTree = "<group>"; };
-		699ED6872880E9AB00C47D6E /* WorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutView.swift; sourceTree = "<group>"; };
+		699ED6872880E9AB00C47D6E /* WorkoutBuilderViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutBuilderViews.swift; sourceTree = "<group>"; };
 		69C33EFF2881B9BC000CFFED /* CodableColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableColor.swift; sourceTree = "<group>"; };
+		69CAB8F928C15E64005ABD66 /* CardioViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardioViews.swift; sourceTree = "<group>"; };
+		69CAB8FC28C15EB1005ABD66 /* WeightLiftingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightLiftingViews.swift; sourceTree = "<group>"; };
+		69CAB8FF28C15F84005ABD66 /* ProfileViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViews.swift; sourceTree = "<group>"; };
 		69D126A7289EE48500C7DCA9 /* WorkoutDaoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDaoView.swift; sourceTree = "<group>"; };
 		69DEAB1C287C691000410576 /* GainBrainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GainBrainApp.swift; sourceTree = "<group>"; };
 		69DEAB1D287C691000410576 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -116,6 +125,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6916C55A28C10A030085328D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				69DEAB5B287C6A9300410576 /* Workout.swift */,
+				694BA3C42881B46D00F73E01 /* WeightLifting.swift */,
+				69C33EFF2881B9BC000CFFED /* CodableColor.swift */,
+				694BA3C72881B47A00F73E01 /* Cardio.swift */,
+				694DAAF1287F804200E31FD1 /* Profile.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		69CAB90228C15FF0005ABD66 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				69DEAB58287C69BB00410576 /* MainMenu.swift */,
+				69E19C7F287F227700187823 /* CreateWorkoutView.swift */,
+				69CAB8FF28C15F84005ABD66 /* ProfileViews.swift */,
+				699ED6872880E9AB00C47D6E /* WorkoutBuilderViews.swift */,
+				69CAB8FC28C15EB1005ABD66 /* WeightLiftingViews.swift */,
+				69CAB8F928C15E64005ABD66 /* CardioViews.swift */,
+				69D126A7289EE48500C7DCA9 /* WorkoutDaoView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		69DEAB16287C691000410576 = {
 			isa = PBXGroup;
 			children = (
@@ -130,20 +165,13 @@
 		69DEAB1B287C691000410576 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				69CAB90228C15FF0005ABD66 /* Views */,
+				6916C55A28C10A030085328D /* Models */,
 				69DEAB1C287C691000410576 /* GainBrainApp.swift */,
 				69DEAB1D287C691000410576 /* ContentView.swift */,
 				69DEAB1E287C691200410576 /* Assets.xcassets */,
-				69DEAB58287C69BB00410576 /* MainMenu.swift */,
-				69DEAB5B287C6A9300410576 /* Workout.swift */,
 				695FE6EE287DAC3A00966B97 /* WorkoutDao.swift */,
-				69E19C7F287F227700187823 /* CreateWorkoutView.swift */,
-				694DAAF1287F804200E31FD1 /* Profile.swift */,
-				699ED6872880E9AB00C47D6E /* WorkoutView.swift */,
-				694BA3C42881B46D00F73E01 /* WeightLifting.swift */,
-				694BA3C72881B47A00F73E01 /* Cardio.swift */,
-				69C33EFF2881B9BC000CFFED /* CodableColor.swift */,
 				696F5B7328837C78004CE108 /* TextFileManager.swift */,
-				69D126A7289EE48500C7DCA9 /* WorkoutDaoView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -345,14 +373,17 @@
 			files = (
 				69E19C80287F227700187823 /* CreateWorkoutView.swift in Sources */,
 				694BA3C82881B47A00F73E01 /* Cardio.swift in Sources */,
+				69CAB8FA28C15E64005ABD66 /* CardioViews.swift in Sources */,
 				69C33F002881B9BC000CFFED /* CodableColor.swift in Sources */,
 				694DAAF2287F804200E31FD1 /* Profile.swift in Sources */,
 				69DEAB46287C691200410576 /* ContentView.swift in Sources */,
-				699ED6882880E9AB00C47D6E /* WorkoutView.swift in Sources */,
+				699ED6882880E9AB00C47D6E /* WorkoutBuilderViews.swift in Sources */,
 				695FE6EF287DAC3A00966B97 /* WorkoutDao.swift in Sources */,
+				69CAB8FD28C15EB1005ABD66 /* WeightLiftingViews.swift in Sources */,
 				69DEAB59287C69BB00410576 /* MainMenu.swift in Sources */,
 				696F5B7428837C78004CE108 /* TextFileManager.swift in Sources */,
 				69D126A8289EE48500C7DCA9 /* WorkoutDaoView.swift in Sources */,
+				69CAB90028C15F84005ABD66 /* ProfileViews.swift in Sources */,
 				694BA3C52881B46D00F73E01 /* WeightLifting.swift in Sources */,
 				69DEAB44287C691200410576 /* GainBrainApp.swift in Sources */,
 				69DEAB5C287C6A9300410576 /* Workout.swift in Sources */,
@@ -365,14 +396,17 @@
 			files = (
 				69E19C81287F227700187823 /* CreateWorkoutView.swift in Sources */,
 				694BA3C92881B47A00F73E01 /* Cardio.swift in Sources */,
+				69CAB8FB28C15E64005ABD66 /* CardioViews.swift in Sources */,
 				69C33F012881B9BC000CFFED /* CodableColor.swift in Sources */,
 				694DAAF3287F804200E31FD1 /* Profile.swift in Sources */,
 				69DEAB47287C691200410576 /* ContentView.swift in Sources */,
-				699ED6892880E9AB00C47D6E /* WorkoutView.swift in Sources */,
+				699ED6892880E9AB00C47D6E /* WorkoutBuilderViews.swift in Sources */,
 				695FE6F0287DAC3A00966B97 /* WorkoutDao.swift in Sources */,
+				69CAB8FE28C15EB1005ABD66 /* WeightLiftingViews.swift in Sources */,
 				69DEAB5A287C69BB00410576 /* MainMenu.swift in Sources */,
 				696F5B7528837C78004CE108 /* TextFileManager.swift in Sources */,
 				69D126A9289EE48500C7DCA9 /* WorkoutDaoView.swift in Sources */,
+				69CAB90128C15F84005ABD66 /* ProfileViews.swift in Sources */,
 				694BA3C62881B46D00F73E01 /* WeightLifting.swift in Sources */,
 				69DEAB45287C691200410576 /* GainBrainApp.swift in Sources */,
 				69DEAB5D287C6A9300410576 /* Workout.swift in Sources */,
