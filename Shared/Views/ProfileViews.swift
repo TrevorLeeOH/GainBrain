@@ -9,175 +9,153 @@ import SwiftUI
 
 struct ProfileSelectionView: View {
     @Environment(\.dismiss) var dismiss
-    @Environment(\.editMode) var editMode
-    @State private var profiles: [Profile] = []
-    @State private var profileSelection: [Bool] = []
-    @State private var createProfileSheet: Bool = false
-    
-    @Binding var selectedProfiles: [Profile]
-    @State private var listSelection: Set<UUID> = Set<UUID>()
-    
-    @State var deleteConfirmation: Bool = false
-    
-    @State var profileToEdit: Profile?
-    
-    private func refresh() {
-        profiles = Profile.getProfiles()
-        while profileSelection.count < profiles.count {
-            profileSelection.append(false)
-        }
-    }
+    @State private var users: [User] = []
+    @Binding var selectedUsers: [User]
     
     var body: some View {
-        List(profiles, selection: $listSelection) { profile in
-            Text(profile.name)
-                .foregroundColor(profile.color.toColor())
+        List {
+            ForEach(users, id: \.userId) { user in
+                HStack {
+                    Image(systemName: selectedUsers.contains(user) ? "checkmark.circle.fill" : "circle")
+                        .renderingMode(.original)
+                        .foregroundColor(selectedUsers.contains(user) ? .accentColor : Color(uiColor: .systemGray4))
+                    Button(user.name) {
+                        if selectedUsers.contains(user) {
+                            selectedUsers = selectedUsers.filter { u in
+                                u != user
+                            }
+                        } else {
+                            selectedUsers.append(user)
+                        }
+                    }
+                    .foregroundColor(user.getColor())
+                }
+                .listRowBackground(selectedUsers.contains(user) ? Color(uiColor: .systemGray4) : nil)
+            }
+            
+            Section {
+                NavigationLink(destination: CreateProfileView()) {
+                    Image(systemName: "plus.circle")
+                        .foregroundColor(.accentColor)
+                    Text("Create New Profile")
+                        .foregroundColor(.accentColor)
+                }
+            }
         }
         .toolbar {
-            ToolbarItem(placement: .bottomBar) {
-                Button("Create New Profile") {
-                    createProfileSheet = true
-                }
-            }
             ToolbarItem(placement: .navigationBarTrailing) {
-                if listSelection.count > 0 {
-                    Button("Remove", role: .destructive) {
-                        deleteConfirmation = true
-                    }
-                    .foregroundColor(Color(uiColor: .systemRed))
-                }
-                
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                if listSelection.count > 0 {
-                    Button("Select") {
-                        selectedProfiles.removeAll()
-                        for profile in profiles {
-                            if listSelection.contains(profile.id) {
-                                selectedProfiles.append(profile)
-                            }
-                        }
+                if selectedUsers.count > 0 {
+                    Button("Done") {
                         dismiss()
                     }
                 }
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                if listSelection.count == 1 {
-                    Button("Edit") {
-                        do {
-                            profileToEdit = try Profile.getProfile(id: listSelection.first!)
-                            createProfileSheet = true
-                        } catch {
-                            print(error.localizedDescription)
-                        }
+            ToolbarItem(placement: .bottomBar) {
+                if selectedUsers.count == 1 {
+                    NavigationLink(destination: CreateProfileView(user: selectedUsers.first!.duplicate())) {
+                        Text("Edit Profile")
+                            .foregroundColor(.accentColor)
                     }
                 }
             }
         }
-        .onAppear { refresh() ; editMode?.wrappedValue = EditMode.active }
-        .alert("Confirm Delete", isPresented: $deleteConfirmation) {
-            Button("Delete Profile And Workouts", role: .destructive) {
-                listSelection.forEach { id in
-                    do {
-                        try Profile.deleteProfile(profileId: id)
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                    
+        .onAppear {
+            users = []
+            users = UserDao.getAll()
+            for i in 0..<selectedUsers.count {
+                if !users.contains(selectedUsers[i]) {
+                    selectedUsers.remove(at: i)
                 }
-                refresh()
             }
-        } message: {
-            Text("Warning: Profile and all corresponding workouts will be deleted. This cannot be undone.")
-        }
-        .sheet(isPresented: $createProfileSheet) { refresh() } content: {
-            CreateProfileView(createProfileSheet: $createProfileSheet, profileToEdit: profileToEdit)
         }
     }
 }
 
 struct CreateProfileView: View {
+    @Environment(\.dismiss) var dismiss
     
-    @Binding var createProfileSheet: Bool
-    
-    var profileToEdit: Profile?
-    
-    @State var profileName: String = ""
-    
-    @State var r: Double = 1.0
-    @State var g: Double = 1.0
-    @State var b: Double = 1.0
+    @StateObject var user: User = User()
     @State var isEditing: Bool = false
+    
+    @State var deleteConfirmation: Bool = false
     
     
     var body: some View {
-        VStack {
-            
-            TextField("New Profile Name", text: $profileName)
+        Form {
+            TextField("New Profile Name", text: $user.name)
                 .multilineTextAlignment(.center)
                 .font(.title)
-                .padding()
+                .padding(.vertical, 5.0)
             HStack {
-                VStack {
+                VStack(spacing: 0.0) {
                     HStack {
-                        Text("Red: ")
-                        Slider(value: $r, in: 0.0...1.0) { editing in
+                        Text("Hue: ")
+                        Slider(value: $user.h, in: 0.0...1.0) { editing in
                             isEditing = editing
                         }
                     }
                     HStack {
-                        Text("Green: ")
-                        Slider(value: $g, in: 0.0...1.0) { editing in
+                        Text("Saturation: ")
+                        Slider(value: $user.s, in: 0.0...1.0) { editing in
                             isEditing = editing
                         }
                     }
                     HStack {
-                        Text("Blue: ")
-                        Slider(value: $b, in: 0.0...1.0) { editing in
+                        Text("Brightness: ")
+                        Slider(value: $user.b, in: 0.0...1.0) { editing in
                             isEditing = editing
                         }
                     }
-                    
                 }
-                .padding(.horizontal)
                 
                 Spacer()
                     .frame(width: 50, height: 100)
                     .cornerRadius(10.0)
                     .background {
                         RoundedRectangle(cornerRadius: 10.0)
-                            .fill(Color(red: r, green: g, blue: b))
+                            .fill(Color(hue: user.h, saturation: user.s, brightness: user.b))
                         
                     }
-                    .padding(.trailing)
-                
+                    .padding(.leading)
             }
-            
-            
-            Button(profileToEdit != nil ? "Save" : "Create") {
+        }
+        .alert("Confirm Delete", isPresented: $deleteConfirmation) {
+            Button("Delete Profile And Workouts", role: .destructive) {
                 do {
-                    if profileToEdit != nil {
-                        try Profile.createProfile(profile: Profile(name: profileName, color: CodableColor(r: r, g: g, b: b, a: 1.0), id: profileToEdit!.id))
-                    } else {
-                        try Profile.createProfile(profile: Profile(name: profileName, color: CodableColor(r: r, g: g, b: b, a: 1.0)))
-                    }
-                    createProfileSheet = false
+                    try UserDao.delete(id: user.userId)
+                    print("successfully deleted user")
+                    dismiss()
                 } catch {
                     print(error.localizedDescription)
                 }
             }
-            .buttonStyle(.bordered)
-            .buttonBorderShape(.capsule)
-            Button("Cancel", role: .destructive) {
-                createProfileSheet = false
-            }
+        } message: {
+            Text("Warning: Profile and all corresponding workouts will be deleted. This cannot be undone.")
         }
-        .onAppear {
-            if profileToEdit != nil {
-                profileName = profileToEdit!.name
-                r = profileToEdit!.color.r
-                g = profileToEdit!.color.g
-                b = profileToEdit!.color.b
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Save And Exit") {
+                    do {
+                        if user.userId == -1 {
+                            try UserDao.create(user: user)
+                            print("Successfully created new user")
+                        } else {
+                            try UserDao.update(user: user)
+                            print("Successfully updated user")
+                        }
+                        dismiss()
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+            ToolbarItem(placement: .bottomBar) {
+                if user.userId != -1 {
+                    Button("Delete User") {
+                        deleteConfirmation = true
+                    }
+                    .foregroundColor(Color(uiColor: .systemRed))
+                }
             }
         }
     }

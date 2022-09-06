@@ -10,35 +10,37 @@ import SwiftUI
 
 struct WorkoutViewMaster: View {
     @Environment(\.dismiss) var dismiss
-    var type: String
+    var type: IdentifiableLabel
     var date: Date = Date.now
-    @State var profiles: [Profile]
+    @State var users: [User]
+    
     var dismissParent: DismissAction
     
-    func removeProfile(id: UUID) {
-        profiles = profiles.filter { profile in
-            return profile.id != id
+    func removeProfile(id: Int64) {
+        users = users.filter { user in
+            return user.userId != id
         }
-        if profiles.isEmpty {
+        if users.isEmpty {
             dismiss()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 dismissParent()
             }
         }
     }
-    
+
     var body: some View {
-        TabView {
-            ForEach(profiles) { profile in
-                WorkoutBuilderView(profile: profile, date: date, type: type, removeProfile: removeProfile)
-                    .tabItem {
-                        Image(systemName: "person.circle")
-                        Text(profile.name)
-                    }
-            }
-        }
-        .navigationViewStyle(.columns)
-        .navigationBarTitleDisplayMode(.inline)
+        EmptyView()
+//        TabView {
+//            ForEach(users) { user in
+//                WorkoutBuilderView(user: user, date: Date.now, type: type, removeProfile: removeProfile)
+//                    .tabItem {
+//                        Image(systemName: "person.circle")
+//                        Text(profile.name)
+//                    }
+//            }
+//        }
+//        .navigationViewStyle(.columns)
+//        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -145,7 +147,7 @@ struct FinishWorkoutView: View {
         for w in weightLiftings {
             wfs.append(w.toStruct())
         }
-        let workout = Workout(date: date, duration: round(date.distance(to: Date.now)), type: type, caloriesBurned: caloriesBurned, notes: notes, weight_lifting: wfs, cardio: cardios)
+        let workout = Workout(id: -1, date: date, duration: round(date.distance(to: Date.now)), type: type, caloriesBurned: caloriesBurned, notes: notes, weight_lifting: wfs, cardio: cardios)
         try WorkoutDao.save(workout: workout, profileId: profile.id)
         
     }

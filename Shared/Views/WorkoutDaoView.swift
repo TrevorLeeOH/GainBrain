@@ -69,7 +69,7 @@ struct WorkoutRetrievalResultsView: View {
     func filterByDuration() {
         if filterDuration {
             filteredWorkouts = filteredWorkouts.filter({ w in
-                w.duration != nil && w.duration! >= minDuration && w.duration! <= maxDuration
+                w.duration >= minDuration && w.duration <= maxDuration
             })
         }
     }
@@ -189,7 +189,7 @@ struct WorkoutDurationFilterView: View {
             return 1.0
         }
         return workouts.reduce(0.0, { m, w in
-            max(m, w.duration != nil ? w.duration! : 0.0)
+            max(m, w.duration)
         })
     }
     
@@ -290,7 +290,7 @@ struct WorkoutDetailedView: View {
             }
             
             Section {
-                Text("Duration: " + (workout.duration != nil ? workout.duration!.TimeIntervalDescription() : "unknown"))
+                Text("Duration: " + (workout.duration.TimeIntervalDescription()))
                 if workout.notes != nil {
                     Text("Notes:\r" + workout.notes!)
                 }
