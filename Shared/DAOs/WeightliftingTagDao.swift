@@ -51,7 +51,7 @@ class WeightliftingTagDao {
         return tags
     }
     
-    static func getAllForCardio(id: Int64) -> [IdentifiableLabel] {
+    static func getAllForWeightlifting(id: Int64) -> [IdentifiableLabel] {
         var tags: [IdentifiableLabel] = []
         
         do {

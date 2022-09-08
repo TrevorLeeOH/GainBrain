@@ -7,7 +7,7 @@
 
 import Foundation
 
-class WeightLiftingDTO: ObservableObject, Equatable {
+class WeightliftingDTO: ObservableObject, Equatable {
     
     var weightliftingId: Int64
     var workoutId: Int64
@@ -27,7 +27,7 @@ class WeightLiftingDTO: ObservableObject, Equatable {
         self.weightIsIndividual = weightIsIndividual
     }
     
-    static func == (lhs: WeightLiftingDTO, rhs: WeightLiftingDTO) -> Bool {
+    static func == (lhs: WeightliftingDTO, rhs: WeightliftingDTO) -> Bool {
         return lhs.weightliftingId == rhs.weightliftingId
     }
     

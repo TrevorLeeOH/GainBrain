@@ -10,17 +10,16 @@ import SwiftUI
 
 struct WorkoutViewMaster: View {
     @Environment(\.dismiss) var dismiss
-    var type: IdentifiableLabel
-    var date: Date = Date.now
-    @State var users: [User]
+    
+    @State var workouts: [WorkoutDTO]
     
     var dismissParent: DismissAction
     
-    func removeProfile(id: Int64) {
-        users = users.filter { user in
-            return user.userId != id
+    func removeProfile(user: User) {
+        workouts = workouts.filter { w in
+            return w.user != user
         }
-        if users.isEmpty {
+        if workouts.isEmpty {
             dismiss()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 dismissParent()
@@ -30,71 +29,70 @@ struct WorkoutViewMaster: View {
 
     var body: some View {
         EmptyView()
-//        TabView {
-//            ForEach(users) { user in
-//                WorkoutBuilderView(user: user, date: Date.now, type: type, removeProfile: removeProfile)
-//                    .tabItem {
-//                        Image(systemName: "person.circle")
-//                        Text(profile.name)
-//                    }
-//            }
-//        }
-//        .navigationViewStyle(.columns)
-//        .navigationBarTitleDisplayMode(.inline)
+        TabView {
+            ForEach(workouts, id: \.workoutId) { workout in
+                WorkoutBuilderView(workout: workout, removeProfile: removeProfile)
+                    .tabItem {
+                        Image(systemName: "person.circle")
+                        Text(workout.user.name)
+                    }
+            }
+        }
+        .navigationViewStyle(.columns)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 struct WorkoutBuilderView: View {
     
-    var profile: Profile
-    var date: Date
-    var type: String
+    @StateObject var workout: WorkoutDTO
     
-    var removeProfile: (UUID) -> Void
+    var removeProfile: (User) -> Void
     
     @State private var showFinishWorkoutSheet: Bool = false
     
-    @State private var weightLiftings: [WeightLiftingBuilder] = []
-    @State private var cardios: [Cardio] = []
     
     var body: some View {
         VStack(spacing: 0.0) {
-            Text(profile.name)
+            Text(workout.user.name)
                 .font(.title)
                 .frame(maxWidth: .infinity)
                 .padding(.bottom)
-                .background(profile.color.toColor())
+                .background(workout.user.getColor())
+            
             List {
                 
-                Section(header: Text("Weight Lifting")) {
-                    ForEach(weightLiftings.indices, id: \.self) { index in
-                        NavigationLink(destination: WeightLiftingBuilderDetailedView(weightLifting: weightLiftings[index]).navigationBarTitleDisplayMode(.large)) {
-                            WeightLiftingBuilderMinimalView(weightLifting: weightLiftings[index])
-                        }
-                        .contextMenu {
-                            Button("Delete") {
-                                weightLiftings.remove(at: index)
-                            }
-                        }
-                    }
-                    NavigationLink(destination: AddWeightLiftingView(weightLiftings: $weightLiftings)) {
-                        Image(systemName: "plus.circle")
-                            .foregroundColor(.accentColor)
-                        Text("Add weight-lifting")
-                            .foregroundColor(.accentColor)
-                    }
-                    
+                DatePicker("Date/Time", selection: $workout.date, displayedComponents: [.date, .hourAndMinute])
+                Button("print Workout") {
+                    print(workout.date)
                 }
+                
+//                Section(header: Text("Weight Lifting")) {
+//                    ForEach(weightLiftings.indices, id: \.self) { index in
+//                        NavigationLink(destination: WeightLiftingBuilderDetailedView(weightLifting: weightLiftings[index]).navigationBarTitleDisplayMode(.large)) {
+//                            WeightLiftingBuilderMinimalView(weightLifting: weightLiftings[index])
+//                        }
+//                        .contextMenu {
+//                            Button("Delete") {
+//                                weightLiftings.remove(at: index)
+//                            }
+//                        }
+//                    }
+//                    NavigationLink(destination: AddWeightLiftingView(weightLiftings: $weightLiftings)) {
+//                        Image(systemName: "plus.circle")
+//                            .foregroundColor(.accentColor)
+//                        Text("Add weight-lifting")
+//                            .foregroundColor(.accentColor)
+//                    }
+//
+//                }
                 Section(header: Text("Cardio")) {
-                    ForEach(cardios.indices, id: \.self) { index in
-                        CardioMinimalView(cardio: cardios[index])
-                            .contextMenu {
-                            Button("Delete") {
-                                cardios.remove(at: index)
-                            }                            
+                    ForEach(CardioDao.getAllForWorkout(id: workout.workoutId), id: \.cardioId) { cardio in
+                        NavigationLink(destination: EditCardioView(cardio: cardio.duplicate())) {
+                            CardioMinimalView(cardio: cardio)
                         }
                     }
-                    NavigationLink(destination: AddCardioView(cardios: $cardios)) {
+                    NavigationLink(destination: EditCardioView(cardio: CardioDTO(workoutId: workout.workoutId))) {
                         Image(systemName: "plus.circle")
                             .foregroundColor(.accentColor)
                         Text("Add cardio")
@@ -104,10 +102,10 @@ struct WorkoutBuilderView: View {
                 
             }
             .overlay {
-                RoundedRectangle(cornerRadius: 16.0).stroke(profile.color.toColor(), lineWidth: 8.0)
+                RoundedRectangle(cornerRadius: 16.0).stroke(workout.user.getColor(), lineWidth: 8.0)
             }
             .padding(4.0)
-            .border(profile.color.toColor(), width: 6.0)
+            .border(workout.user.getColor(), width: 6.0)
             
             Button("Finish Workout") {
                 showFinishWorkoutSheet = true
@@ -122,7 +120,7 @@ struct WorkoutBuilderView: View {
         .sheet(isPresented: $showFinishWorkoutSheet) {
             
         } content: {
-            FinishWorkoutView(isPresented: $showFinishWorkoutSheet, date: date, type: type, profile: profile, weightLiftings: weightLiftings, cardios: cardios, removeProfile: removeProfile)
+            FinishWorkoutView(isPresented: $showFinishWorkoutSheet, workout: workout, removeProfile: removeProfile)
         }
     }
 }
@@ -130,25 +128,14 @@ struct WorkoutBuilderView: View {
 
 struct FinishWorkoutView: View {
     @Binding var isPresented: Bool
-    var date: Date
-    var type: String
-    var profile: Profile
-    var weightLiftings: [WeightLiftingBuilder]
-    var cardios: [Cardio]
+    @ObservedObject var workout: WorkoutDTO
     
-    var removeProfile: (UUID) -> Void
+    var removeProfile: (User) -> Void
     
-    @State private var caloriesBurned: Int?
-    @State private var notes: String = ""
-    
+    @State var notes: String = ""
     
     func saveWorkout() throws {
-        var wfs: [WeightLifting] = [];
-        for w in weightLiftings {
-            wfs.append(w.toStruct())
-        }
-        let workout = Workout(id: -1, date: date, duration: round(date.distance(to: Date.now)), type: type, caloriesBurned: caloriesBurned, notes: notes, weight_lifting: wfs, cardio: cardios)
-        try WorkoutDao.save(workout: workout, profileId: profile.id)
+        //code here
         
     }
     
@@ -159,7 +146,7 @@ struct FinishWorkoutView: View {
                     TextEditor(text: $notes)
                 }
                 Section(header: Text("Calories Burned (optional)")) {
-                    TextField("", value: $caloriesBurned, format: .number)
+                    TextField("", value: $workout.caloriesBurned, format: .number)
                 }
             }
             HStack {
@@ -172,23 +159,20 @@ struct FinishWorkoutView: View {
                     do {
                         try saveWorkout()
                         isPresented = false
-                        removeProfile(profile.id)
+                        removeProfile(workout.user)
                     } catch {
                         print(error.localizedDescription)
                     }
                     
                 }
-                Button("debug button") {
-                    print(Date.now)
-                    print(round(date.distance(to: Date.now)))
-                }
+                
                 Spacer()
             }
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
             Button("Discard Workout", role: .destructive) {
                 isPresented = false
-                removeProfile(profile.id)
+                removeProfile(workout.user)
             }
             .padding()
         }

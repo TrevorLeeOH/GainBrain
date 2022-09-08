@@ -25,11 +25,16 @@ class WorkoutDao {
     
     
     
-    static func create() {
-        
+    static func create(workout: WorkoutDTO) throws -> WorkoutDTO {
+        do {
+            let db = try Database.getDatabase()
+            let newId = try db.run(table.insert(userId <- workout.user.userId, workoutTypeId <- workout.workoutType.id, date <- workout.date, duration <- workout.duration, caloriesBurned <- workout.caloriesBurned, notes <- workout.notes))
+            return try get(workoutId: newId)
+        }
     }
     
     static func get(workoutId: Int64) throws -> WorkoutDTO {
+        print("called get with id of \(workoutId)")
         do {
             let db = try Database.getDatabase()
             let rowSet = try db.prepareRowIterator(table.filter(self.workoutId == workoutId))
@@ -42,7 +47,7 @@ class WorkoutDao {
         }
     }
     
-    static func getAll(userId: Int64) -> [Workout] {
+    static func getAllForUser(userId: Int64) -> [Workout] {
         var workouts: [Workout] = []
         
         do {
@@ -54,6 +59,13 @@ class WorkoutDao {
         } catch {}
         
         return workouts
+    }
+    
+    static func debugDeleteAll() throws {
+        do {
+            let db = try Database.getDatabase()
+            try db.run(table.delete())
+        }
     }
     
     
@@ -76,8 +88,8 @@ class WorkoutDao {
                               duration: row[duration],
                               caloriesBurned: row[caloriesBurned],
                               notes: row[notes],
-                              weightLifting: [],
-                              cardio: [])
+                              weightLifting: WeightliftingDao.getAllForWorkout(id: row[workoutId]),
+                              cardio: CardioDao.getAllForWorkout(id: row[workoutId]))
     }
     
     

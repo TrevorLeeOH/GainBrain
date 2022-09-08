@@ -27,13 +27,14 @@ struct MainMenu: View {
                         Text("Start Workout")
                     }))
                     
-                    MainMenuItemView(view: AnyView(NavigationLink(destination: WorkoutDaoView()) {
+                    MainMenuItemView(view: AnyView(NavigationLink(destination: EmptyView()) {
                         Text("View Workouts")
                     }))
                     
                     MainMenuItemView(view: AnyView(NavigationLink(destination: DebugView()) {
                         Text("Debug")
                     }))
+                    
                 }
                 .font(.title)
                 
@@ -69,14 +70,53 @@ struct MainMenuItemView: View {
 
 
 struct DebugView: View {
-    
+    @State var value: Int64 = -1
     
     var body: some View {
         
         VStack {
             
+            TextField("enter value", value: $value, format: .number)
+            
+            
             Button("Init Database") {
                 Database.initializeDatabase()
+            }
+            .padding()
+            
+            Button("Print Cardios") {
+                let cardios = CardioDao.debugGetAll()
+                
+                for c in cardios {
+                    print("cardio id: \(c.cardioId), workout id: \(c.workoutId)")
+                }
+            }
+            
+            Button("Print Workouts") {
+                let workouts = WorkoutDao.getAllForUser(userId: value)
+                
+                for w in workouts {
+                    print(w.toString())
+                }
+                
+            }
+            .padding()
+            
+            Button("Delete ALL cardio") {
+                do {
+                    try CardioDao.debugDeleteAll()
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+            
+            Button("delete ALL workouts") {
+                do {
+                    try WorkoutDao.debugDeleteAll()
+                } catch {
+                    print(error.localizedDescription)
+                }
+                
             }
             
             

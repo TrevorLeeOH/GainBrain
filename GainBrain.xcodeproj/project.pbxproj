@@ -11,12 +11,10 @@
 		691BB7EF28C6B06A00B2A77E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691BB7EE28C6B06A00B2A77E /* User.swift */; };
 		6940232628C3D4DB0086430B /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 6940232528C3D4DB0086430B /* SQLite */; };
 		6940232B28C3DF6A0086430B /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6940232A28C3DF6A0086430B /* Database.swift */; };
-		694BA3C52881B46D00F73E01 /* WeightLiftingDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 694BA3C42881B46D00F73E01 /* WeightLiftingDTO.swift */; };
-		694BA3C62881B46D00F73E01 /* WeightLiftingDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 694BA3C42881B46D00F73E01 /* WeightLiftingDTO.swift */; };
+		694BA3C52881B46D00F73E01 /* WeightliftingDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 694BA3C42881B46D00F73E01 /* WeightliftingDTO.swift */; };
+		694BA3C62881B46D00F73E01 /* WeightliftingDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 694BA3C42881B46D00F73E01 /* WeightliftingDTO.swift */; };
 		694BA3C82881B47A00F73E01 /* CardioDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 694BA3C72881B47A00F73E01 /* CardioDTO.swift */; };
 		694BA3C92881B47A00F73E01 /* CardioDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 694BA3C72881B47A00F73E01 /* CardioDTO.swift */; };
-		694DAAF2287F804200E31FD1 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 694DAAF1287F804200E31FD1 /* Profile.swift */; };
-		694DAAF3287F804200E31FD1 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 694DAAF1287F804200E31FD1 /* Profile.swift */; };
 		695FE6EF287DAC3A00966B97 /* WorkoutDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695FE6EE287DAC3A00966B97 /* WorkoutDao.swift */; };
 		696F5B7428837C78004CE108 /* TextFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696F5B7328837C78004CE108 /* TextFileManager.swift */; };
 		696F5B7528837C78004CE108 /* TextFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696F5B7328837C78004CE108 /* TextFileManager.swift */; };
@@ -33,6 +31,7 @@
 		697D8C0A28C7FD8F00DA8651 /* WeightliftingSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697D8C0928C7FD8F00DA8651 /* WeightliftingSet.swift */; };
 		699ED6882880E9AB00C47D6E /* WorkoutBuilderViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699ED6872880E9AB00C47D6E /* WorkoutBuilderViews.swift */; };
 		699ED6892880E9AB00C47D6E /* WorkoutBuilderViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699ED6872880E9AB00C47D6E /* WorkoutBuilderViews.swift */; };
+		69A3F9F428CA8A4D00410632 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A3F9F328CA8A4D00410632 /* Session.swift */; };
 		69C33F002881B9BC000CFFED /* CodableColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C33EFF2881B9BC000CFFED /* CodableColor.swift */; };
 		69C33F012881B9BC000CFFED /* CodableColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C33EFF2881B9BC000CFFED /* CodableColor.swift */; };
 		69CAB8FA28C15E64005ABD66 /* CardioViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8F928C15E64005ABD66 /* CardioViews.swift */; };
@@ -82,9 +81,8 @@
 		691BB7EC28C6ABE500B2A77E /* UserDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDao.swift; sourceTree = "<group>"; };
 		691BB7EE28C6B06A00B2A77E /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6940232A28C3DF6A0086430B /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Database.swift; path = Shared/Database.swift; sourceTree = SOURCE_ROOT; };
-		694BA3C42881B46D00F73E01 /* WeightLiftingDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightLiftingDTO.swift; sourceTree = "<group>"; };
+		694BA3C42881B46D00F73E01 /* WeightliftingDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightliftingDTO.swift; sourceTree = "<group>"; };
 		694BA3C72881B47A00F73E01 /* CardioDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardioDTO.swift; sourceTree = "<group>"; };
-		694DAAF1287F804200E31FD1 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		695FE6EE287DAC3A00966B97 /* WorkoutDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WorkoutDao.swift; path = ../WorkoutDao.swift; sourceTree = "<group>"; };
 		696F5B7328837C78004CE108 /* TextFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFileManager.swift; sourceTree = "<group>"; };
 		697D8BF528C7D71300DA8651 /* IdentifiableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableLabel.swift; sourceTree = "<group>"; };
@@ -99,6 +97,7 @@
 		697D8C0728C7FCF900DA8651 /* WeightliftingSetDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightliftingSetDao.swift; sourceTree = "<group>"; };
 		697D8C0928C7FD8F00DA8651 /* WeightliftingSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightliftingSet.swift; sourceTree = "<group>"; };
 		699ED6872880E9AB00C47D6E /* WorkoutBuilderViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutBuilderViews.swift; sourceTree = "<group>"; };
+		69A3F9F328CA8A4D00410632 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		69C33EFF2881B9BC000CFFED /* CodableColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableColor.swift; sourceTree = "<group>"; };
 		69CAB8F928C15E64005ABD66 /* CardioViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardioViews.swift; sourceTree = "<group>"; };
 		69CAB8FC28C15EB1005ABD66 /* WeightLiftingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightLiftingViews.swift; sourceTree = "<group>"; };
@@ -160,12 +159,12 @@
 				697D8BF928C7E4EB00DA8651 /* Workout.swift */,
 				69DEAB5B287C6A9300410576 /* WorkoutDTO.swift */,
 				694BA3C72881B47A00F73E01 /* CardioDTO.swift */,
-				694BA3C42881B46D00F73E01 /* WeightLiftingDTO.swift */,
+				694BA3C42881B46D00F73E01 /* WeightliftingDTO.swift */,
 				697D8C0928C7FD8F00DA8651 /* WeightliftingSet.swift */,
 				69C33EFF2881B9BC000CFFED /* CodableColor.swift */,
-				694DAAF1287F804200E31FD1 /* Profile.swift */,
 				691BB7EE28C6B06A00B2A77E /* User.swift */,
 				697D8BF528C7D71300DA8651 /* IdentifiableLabel.swift */,
+				69A3F9F328CA8A4D00410632 /* Session.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -174,8 +173,8 @@
 			isa = PBXGroup;
 			children = (
 				6940232A28C3DF6A0086430B /* Database.swift */,
-				695FE6EE287DAC3A00966B97 /* WorkoutDao.swift */,
 				691BB7EC28C6ABE500B2A77E /* UserDao.swift */,
+				695FE6EE287DAC3A00966B97 /* WorkoutDao.swift */,
 				697D8BF728C7D7E800DA8651 /* WorkoutTypeDao.swift */,
 				697D8BFB28C7EC2400DA8651 /* CardioDao.swift */,
 				697D8BFD28C7EC5B00DA8651 /* CardioTypeDao.swift */,
@@ -434,7 +433,6 @@
 				69CAB8FA28C15E64005ABD66 /* CardioViews.swift in Sources */,
 				697D8C0428C7FB0C00DA8651 /* WeightliftingTagDao.swift in Sources */,
 				69C33F002881B9BC000CFFED /* CodableColor.swift in Sources */,
-				694DAAF2287F804200E31FD1 /* Profile.swift in Sources */,
 				69DEAB46287C691200410576 /* ContentView.swift in Sources */,
 				699ED6882880E9AB00C47D6E /* WorkoutBuilderViews.swift in Sources */,
 				695FE6EF287DAC3A00966B97 /* WorkoutDao.swift in Sources */,
@@ -449,8 +447,9 @@
 				69CAB90028C15F84005ABD66 /* ProfileViews.swift in Sources */,
 				697D8BF628C7D71300DA8651 /* IdentifiableLabel.swift in Sources */,
 				697D8C0A28C7FD8F00DA8651 /* WeightliftingSet.swift in Sources */,
+				69A3F9F428CA8A4D00410632 /* Session.swift in Sources */,
 				697D8BFA28C7E4EB00DA8651 /* Workout.swift in Sources */,
-				694BA3C52881B46D00F73E01 /* WeightLiftingDTO.swift in Sources */,
+				694BA3C52881B46D00F73E01 /* WeightliftingDTO.swift in Sources */,
 				697D8C0628C7FC1D00DA8651 /* WeightliftingDao.swift in Sources */,
 				69DEAB44287C691200410576 /* GainBrainApp.swift in Sources */,
 				697D8BFC28C7EC2400DA8651 /* CardioDao.swift in Sources */,
@@ -469,7 +468,6 @@
 				694BA3C92881B47A00F73E01 /* CardioDTO.swift in Sources */,
 				69CAB8FB28C15E64005ABD66 /* CardioViews.swift in Sources */,
 				69C33F012881B9BC000CFFED /* CodableColor.swift in Sources */,
-				694DAAF3287F804200E31FD1 /* Profile.swift in Sources */,
 				69DEAB47287C691200410576 /* ContentView.swift in Sources */,
 				699ED6892880E9AB00C47D6E /* WorkoutBuilderViews.swift in Sources */,
 				69CAB8FE28C15EB1005ABD66 /* WeightLiftingViews.swift in Sources */,
@@ -477,7 +475,7 @@
 				696F5B7528837C78004CE108 /* TextFileManager.swift in Sources */,
 				69D126A9289EE48500C7DCA9 /* WorkoutDaoView.swift in Sources */,
 				69CAB90128C15F84005ABD66 /* ProfileViews.swift in Sources */,
-				694BA3C62881B46D00F73E01 /* WeightLiftingDTO.swift in Sources */,
+				694BA3C62881B46D00F73E01 /* WeightliftingDTO.swift in Sources */,
 				69DEAB45287C691200410576 /* GainBrainApp.swift in Sources */,
 				69DEAB5D287C6A9300410576 /* WorkoutDTO.swift in Sources */,
 			);

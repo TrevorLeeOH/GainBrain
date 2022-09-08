@@ -11,7 +11,7 @@ class CardioDTO: ObservableObject, Equatable {
     
     var cardioId: Int64
     var workoutId: Int64
-    var cardioType: IdentifiableLabel
+    @Published var cardioType: IdentifiableLabel
     @Published var tags: [IdentifiableLabel]
     @Published var duration: Double?
     @Published var distance: Double?
@@ -19,7 +19,7 @@ class CardioDTO: ObservableObject, Equatable {
     @Published var resistance: Double?
     @Published var incline: Double?
     
-    init(cardioId: Int64 = -1, workoutId: Int64, cardioType: IdentifiableLabel, tags: [IdentifiableLabel] = [], duration: Double?, distance: Double?, speed: Double?, resistance: Double?, incline: Double?) {
+    init(cardioId: Int64 = -1, workoutId: Int64, cardioType: IdentifiableLabel = IdentifiableLabel(), tags: [IdentifiableLabel] = [], duration: Double? = nil, distance: Double? = nil, speed: Double? = nil, resistance: Double? = nil, incline: Double? = nil) {
         self.cardioId = cardioId
         self.workoutId = workoutId
         self.cardioType = cardioType
@@ -33,6 +33,10 @@ class CardioDTO: ObservableObject, Equatable {
     
     static func == (lhs: CardioDTO, rhs: CardioDTO) -> Bool {
         return lhs.cardioId == rhs.cardioId
+    }
+    
+    public func duplicate() -> CardioDTO {
+        return CardioDTO(cardioId: cardioId, workoutId: workoutId, cardioType: cardioType, tags: tags, duration: duration, distance: distance, speed: speed, resistance: resistance, incline: incline)
     }
 }
 

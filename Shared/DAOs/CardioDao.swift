@@ -54,6 +54,40 @@ class CardioDao {
         
     }
     
+    static func debugGetAll() -> [CardioDTO] {
+        var cardios: [CardioDTO] = []
+        
+        do {
+            let db = try Database.getDatabase()
+            let rowSet = try db.prepareRowIterator(table)
+            for row in try Array(rowSet) {
+                try cardios.append(mapRowToCardioDTO(row: row))
+            }
+        } catch {}
+        
+        return cardios
+    }
+    
+    static func debugDeleteAll() throws {
+        do {
+            let db = try Database.getDatabase()
+            try db.run(table.delete())
+        }
+    }
+    
+    static func update(cardio: CardioDTO) throws {
+        do {
+            let db = try Database.getDatabase()
+            let cardioRow = table.filter(cardioId == cardio.cardioId)
+            try db.run(cardioRow.update(cardioTypeId <- cardio.cardioType.id,
+                                        duration <- cardio.duration,
+                                        distance <- cardio.distance,
+                                        speed <- cardio.speed,
+                                        resistance <- cardio.resistance,
+                                        incline <- cardio.incline))
+        }
+    }
+    
     static func mapRowToCardioDTO(row: RowIterator.Element) throws -> CardioDTO {
         return try CardioDTO(cardioId: row[cardioId],
                              workoutId: row[workoutId],
