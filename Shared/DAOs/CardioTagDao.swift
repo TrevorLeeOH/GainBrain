@@ -20,10 +20,10 @@ class CardioTagDao {
         case CardioTagNotFound(id: Int64)
     }
     
-    static func create(type: IdentifiableLabel) throws {
+    static func create(tag: IdentifiableLabel) throws {
         do {
             let db = try Database.getDatabase()
-            try db.run(cardioTagTable.insert(name <- type.name))
+            try db.run(cardioTagTable.insert(name <- tag.name))
         }
     }
     
@@ -58,9 +58,9 @@ class CardioTagDao {
             let db = try Database.getDatabase()
             let rowSet = try db.prepareRowIterator(cardioTagTable
                 .join(cardioCardioTagTable, on: cardioTagTable[cardioTagId] == cardioCardioTagTable[cardioTagId])
-                .filter(cardioCardioTagTable[cardioId] == id))
+                .filter(cardioId == id))
             for row in try Array(rowSet) {
-                tags.append(mapRowToTag(row: row))
+                tags.append(IdentifiableLabel(id: row[cardioTagTable[cardioTagId]], name: row[name]))
             }
             
         } catch {}
@@ -81,6 +81,24 @@ class CardioTagDao {
             let db = try Database.getDatabase()
             let tagRow = cardioTagTable.filter(cardioTagId == id)
             try db.run(tagRow.delete())
+        }
+    }
+    
+    static func deleteAllForCardio(id: Int64) throws {
+        do {
+            let db = try Database.getDatabase()
+            let targetRows = cardioCardioTagTable.filter(cardioId == id)
+            try db.run(targetRows.delete())
+        }
+    }
+    
+    static func updateTagsForCardio(cardio: CardioDTO) throws {
+        do {
+            let db = try Database.getDatabase()
+            try deleteAllForCardio(id: cardio.cardioId)
+            for tag in cardio.tags {
+                try db.run(cardioCardioTagTable.insert(cardioId <- cardio.cardioId, cardioTagId <- tag.id))
+            }
         }
     }
     

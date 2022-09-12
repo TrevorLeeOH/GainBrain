@@ -18,6 +18,35 @@ class Database {
         }
     }
     
+    static func updateWLSetTable() {
+        do {
+            let weightliftingSet = Table("weightlifting_set")
+            let weightliftingSetId = Expression<Int64>("weightlifting_set_id")
+            let weightliftingIdFK = Expression<Int64>("weightlifting_id")
+            let reps = Expression<Int>("reps")
+            let weight = Expression<Double>("weight")
+            let wSetIndex = Expression<Int>("index")
+            
+            let weightlifting = Table("weightlifting")
+            let weightliftingId = Expression<Int64>("weightlifting_id")
+            
+            let db = try getDatabase()
+            
+            
+            try db.run(weightliftingSet.drop())
+            try db.run(weightliftingSet.create { t in
+                t.column(weightliftingSetId, primaryKey: true)
+                t.column(weightliftingIdFK, references: weightlifting, weightliftingId)
+                t.column(reps)
+                t.column(weight)
+                t.column(wSetIndex)
+            })
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+    }
+    
     
     static func initializeDatabase() {
         let documentDirectory: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
@@ -170,12 +199,14 @@ class Database {
             let weightliftingIdFK = Expression<Int64>("weightlifting_id")
             let reps = Expression<Int>("reps")
             let weight = Expression<Double>("weight")
+            let wSetIndex = Expression<Int>("index")
             
             try db.run(weightliftingSet.create { t in
                 t.column(weightliftingSetId, primaryKey: true)
                 t.column(weightliftingIdFK, references: weightlifting, weightliftingId)
                 t.column(reps)
                 t.column(weight)
+                t.column(wSetIndex)
             })
             
             //Weightlifting Tag Table

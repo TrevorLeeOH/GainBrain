@@ -60,7 +60,7 @@ class WeightliftingTagDao {
                 .join(weightliftingWeightliftingTagTable, on: weightliftingTagTable[weightliftingTagId] == weightliftingWeightliftingTagTable[weightliftingTagId])
                 .filter(weightliftingWeightliftingTagTable[weightliftingId] == id))
             for row in try Array(rowSet) {
-                tags.append(mapRowToTag(row: row))
+                tags.append(IdentifiableLabel(id: row[weightliftingTagTable[weightliftingTagId]], name: row[name]))
             }
             
         } catch {}
@@ -75,6 +75,26 @@ class WeightliftingTagDao {
             try db.run(tagRow.update(name <- tag.name))
         }
     }
+    
+    static func updateTagsForWeightlifting(weightlifting: WeightliftingDTO) throws {
+        do {
+            let db = try Database.getDatabase()
+            try deleteAllForWeightlifting(id: weightlifting.weightliftingId)
+            for tag in weightlifting.tags {
+                try db.run(weightliftingWeightliftingTagTable.insert(weightliftingId <- weightlifting.weightliftingId, weightliftingTagId <- tag.id))
+            }
+        }
+    }
+    
+    static func deleteAllForWeightlifting(id: Int64) throws {
+        do {
+            let db = try Database.getDatabase()
+            let targetRows = weightliftingWeightliftingTagTable.filter(weightliftingId == id)
+            try db.run(targetRows.delete())
+        }
+    }
+    
+    
     
     static func delete(id: Int64) throws {
         do {

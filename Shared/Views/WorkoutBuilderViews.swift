@@ -11,15 +11,15 @@ import SwiftUI
 struct WorkoutViewMaster: View {
     @Environment(\.dismiss) var dismiss
     
-    @State var workouts: [WorkoutDTO]
+    var session: Session
     
     var dismissParent: DismissAction
     
     func removeProfile(user: User) {
-        workouts = workouts.filter { w in
+        session.workouts = session.workouts.filter { w in
             return w.user != user
         }
-        if workouts.isEmpty {
+        if session.workouts.isEmpty {
             dismiss()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 dismissParent()
@@ -30,8 +30,9 @@ struct WorkoutViewMaster: View {
     var body: some View {
         EmptyView()
         TabView {
-            ForEach(workouts, id: \.workoutId) { workout in
-                WorkoutBuilderView(workout: workout, removeProfile: removeProfile)
+            ForEach(session.workouts, id: \.workoutId) { workout in
+                WorkoutBuilderView(removeProfile: removeProfile)
+                    .environmentObject(workout)
                     .tabItem {
                         Image(systemName: "person.circle")
                         Text(workout.user.name)
@@ -44,16 +45,28 @@ struct WorkoutViewMaster: View {
 }
 
 struct WorkoutBuilderView: View {
-    
-    @StateObject var workout: WorkoutDTO
+    @EnvironmentObject var workout: WorkoutDTO
     
     var removeProfile: (User) -> Void
     
     @State private var showFinishWorkoutSheet: Bool = false
     
+    @State private var cardioTemplate: CardioDTO = CardioDTO()
+    @State private var weightliftingTemplate: WeightliftingDTO = WeightliftingDTO()
+    @State private var navigationSwitch: String?
+    
+    @State private var refresh: Bool = false
+    
+    private func loadExercises() {
+        print("refreshed")
+        refresh.toggle()
+    }
     
     var body: some View {
         VStack(spacing: 0.0) {
+            NavigationLink(destination: EditWeightliftingView(weightlifting: weightliftingTemplate).environmentObject(workout), tag: "EDIT_WEIGHTLIFTING", selection: $navigationSwitch) { EmptyView() }
+            NavigationLink(destination: EditCardioView(cardio: cardioTemplate).environmentObject(workout), tag: "EDIT_CARDIO", selection: $navigationSwitch) { EmptyView() }
+            
             Text(workout.user.name)
                 .font(.title)
                 .frame(maxWidth: .infinity)
@@ -62,41 +75,50 @@ struct WorkoutBuilderView: View {
             
             List {
                 
-                DatePicker("Date/Time", selection: $workout.date, displayedComponents: [.date, .hourAndMinute])
-                Button("print Workout") {
-                    print(workout.date)
-                }
+//                DatePicker("Date/Time", selection: workout.date, displayedComponents: [.date, .hourAndMinute])
                 
-//                Section(header: Text("Weight Lifting")) {
-//                    ForEach(weightLiftings.indices, id: \.self) { index in
-//                        NavigationLink(destination: WeightLiftingBuilderDetailedView(weightLifting: weightLiftings[index]).navigationBarTitleDisplayMode(.large)) {
-//                            WeightLiftingBuilderMinimalView(weightLifting: weightLiftings[index])
-//                        }
-//                        .contextMenu {
-//                            Button("Delete") {
-//                                weightLiftings.remove(at: index)
-//                            }
-//                        }
-//                    }
-//                    NavigationLink(destination: AddWeightLiftingView(weightLiftings: $weightLiftings)) {
-//                        Image(systemName: "plus.circle")
-//                            .foregroundColor(.accentColor)
-//                        Text("Add weight-lifting")
-//                            .foregroundColor(.accentColor)
-//                    }
-//
-//                }
-                Section(header: Text("Cardio")) {
-                    ForEach(CardioDao.getAllForWorkout(id: workout.workoutId), id: \.cardioId) { cardio in
-                        NavigationLink(destination: EditCardioView(cardio: cardio.duplicate())) {
-                            CardioMinimalView(cardio: cardio)
+                
+                Section(header: Text("Weightlifting")) {
+                    ForEach(workout.weightlifting, id: \.weightliftingId) { wl in
+                        Button {
+                            weightliftingTemplate = wl.duplicate()
+                            navigationSwitch = "EDIT_WEIGHTLIFTING"
+                        } label: {
+                            WeightLiftingMinimalView(weightLifting: wl, refresh: $refresh)
                         }
                     }
-                    NavigationLink(destination: EditCardioView(cardio: CardioDTO(workoutId: workout.workoutId))) {
-                        Image(systemName: "plus.circle")
-                            .foregroundColor(.accentColor)
-                        Text("Add cardio")
-                            .foregroundColor(.accentColor)
+                    Button {
+                        weightliftingTemplate = WeightliftingDTO(workoutId: workout.workoutId)
+                        navigationSwitch = "EDIT_WEIGHTLIFTING"
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus.circle")
+                                .foregroundColor(.accentColor)
+                            Text("Add weightlifting")
+                                .foregroundColor(.accentColor)
+                        }
+                    }
+
+                }
+                Section(header: Text("Cardio")) {
+                    ForEach(workout.cardio, id: \.cardioId) { cardio in
+                        Button {
+                            cardioTemplate = cardio.duplicate()
+                            navigationSwitch = "EDIT_CARDIO"
+                        } label: {
+                            CardioMinimalView(cardio: cardio, refresh: $refresh)
+                        }
+                    }
+                    Button {
+                        cardioTemplate = CardioDTO(workoutId: workout.workoutId)
+                        navigationSwitch = "EDIT_CARDIO"
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus.circle")
+                                .foregroundColor(.accentColor)
+                            Text("Add cardio")
+                                .foregroundColor(.accentColor)
+                        }
                     }
                 }
                 
@@ -116,6 +138,9 @@ struct WorkoutBuilderView: View {
             .buttonBorderShape(.capsule)
             Rectangle().fill(Color(UIColor.systemGray))
                 .frame(height: 1.0)
+        }
+        .onAppear {
+            loadExercises()
         }
         .sheet(isPresented: $showFinishWorkoutSheet) {
             

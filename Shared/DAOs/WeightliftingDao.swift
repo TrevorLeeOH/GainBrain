@@ -17,14 +17,35 @@ class WeightliftingDao {
     static var weightIsOffset = Expression<Bool>("weight_is_offset")
     static var weightIsIndividual = Expression<Bool>("weight_is_individual")
     
+    enum WeightliftingDaoException: Error {
+        case WeightliftingNotFound(id: Int64)
+    }
+    
     static func create(wl: WeightliftingDTO) throws {
         do {
             let db = try Database.getDatabase()
-            try db.run(table.insert(
+            let wlId = try db.run(table.insert(
                 workoutId <- wl.workoutId,
                 weightliftingTypeId <- wl.weightliftingType.id,
                 weightIsOffset <- wl.weightIsOffset,
                 weightIsIndividual <- wl.weightIsIndividual))
+            
+            let newWl = try get(id: wlId)
+            try WeightliftingTagDao.updateTagsForWeightlifting(weightlifting: newWl)
+            try WeightliftingSetDao.updateAllForWeightlifting(wl: newWl)
+        }
+    }
+    
+    static func get(id: Int64) throws -> WeightliftingDTO {
+        do {
+            let db = try Database.getDatabase()
+            let rowSet = try db.prepareRowIterator(table.filter(weightliftingId == id))
+            let result = try Array(rowSet)
+            if result.count == 1 {
+                return try mapRowToWeightliftingDTO(row: result.first!)
+            } else {
+                throw WeightliftingDaoException.WeightliftingNotFound(id: id)
+            }
         }
     }
     
@@ -42,6 +63,17 @@ class WeightliftingDao {
         return wls
     }
     
+    static func update(wl: WeightliftingDTO) throws {
+        do {
+            let db = try Database.getDatabase()
+            let wlRow = table.filter(weightliftingId == wl.weightliftingId)
+            try db.run(wlRow.update(weightliftingTypeId <- wl.weightliftingType.id,
+                                        weightIsOffset <- wl.weightIsOffset,
+                                        weightIsIndividual <- wl.weightIsIndividual))
+            try WeightliftingTagDao.updateTagsForWeightlifting(weightlifting: wl)
+            try WeightliftingSetDao.updateAllForWeightlifting(wl: wl)
+        }
+    }
     
     static func mapRowToWeightliftingDTO(row: RowIterator.Element) throws -> WeightliftingDTO {
         return try WeightliftingDTO(weightliftingId: row[weightliftingId],
@@ -51,6 +83,5 @@ class WeightliftingDao {
                                     sets: WeightliftingSetDao.getAllForWeightlifting(id: row[weightliftingId]),
                                     weightIsOffset: row[weightIsOffset],
                                     weightIsIndividual: row[weightIsIndividual])
-        
     }
 }

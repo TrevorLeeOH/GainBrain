@@ -17,7 +17,7 @@ class WeightliftingDTO: ObservableObject, Equatable {
     @Published var weightIsOffset: Bool
     @Published var weightIsIndividual: Bool
     
-    init(weightliftingId: Int64 = -1, workoutId: Int64, weightliftingType: IdentifiableLabel, tags: [IdentifiableLabel] = [], sets: [WeightliftingSet] = [], weightIsOffset: Bool = false, weightIsIndividual: Bool = false) {
+    init(weightliftingId: Int64 = -1, workoutId: Int64 = -1, weightliftingType: IdentifiableLabel = IdentifiableLabel(), tags: [IdentifiableLabel] = [], sets: [WeightliftingSet] = [], weightIsOffset: Bool = false, weightIsIndividual: Bool = false) {
         self.weightliftingId = weightliftingId
         self.workoutId = workoutId
         self.weightliftingType = weightliftingType
@@ -29,6 +29,10 @@ class WeightliftingDTO: ObservableObject, Equatable {
     
     static func == (lhs: WeightliftingDTO, rhs: WeightliftingDTO) -> Bool {
         return lhs.weightliftingId == rhs.weightliftingId
+    }
+    
+    public func duplicate() -> WeightliftingDTO {
+        return WeightliftingDTO(weightliftingId: weightliftingId, workoutId: workoutId, weightliftingType: weightliftingType, tags: tags, sets: sets, weightIsOffset: weightIsOffset, weightIsIndividual: weightIsIndividual)
     }
     
 }

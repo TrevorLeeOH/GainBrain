@@ -88,7 +88,7 @@ class WorkoutDao {
                               duration: row[duration],
                               caloriesBurned: row[caloriesBurned],
                               notes: row[notes],
-                              weightLifting: WeightliftingDao.getAllForWorkout(id: row[workoutId]),
+                              weightlifting: WeightliftingDao.getAllForWorkout(id: row[workoutId]),
                               cardio: CardioDao.getAllForWorkout(id: row[workoutId]))
     }
     

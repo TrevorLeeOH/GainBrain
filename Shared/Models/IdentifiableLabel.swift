@@ -8,7 +8,8 @@
 import Foundation
 
 
-class IdentifiableLabel: Identifiable {
+class IdentifiableLabel: Equatable {
+    
     public var id: Int64
     public var name: String
     
@@ -16,4 +17,9 @@ class IdentifiableLabel: Identifiable {
         self.id = id
         self.name = name
     }
+    
+    static func == (lhs: IdentifiableLabel, rhs: IdentifiableLabel) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
 }

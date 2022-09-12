@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct CardioMinimalView: View {
-    var cardio: CardioDTO
+    @ObservedObject var cardio: CardioDTO
+    
+    @Binding var refresh: Bool
     
     var body: some View {
         HStack {
@@ -50,7 +52,7 @@ struct CardioMinimalView: View {
 }
 
 struct CardioDetailView: View {
-    var cardio: CardioDTO
+    @ObservedObject var cardio: CardioDTO
     
     var body: some View {
         List {
@@ -76,15 +78,14 @@ struct CardioDetailView: View {
 
 struct EditCardioView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var workout: WorkoutDTO
     
-    @StateObject var cardio: CardioDTO
-    
-    var cardioId: Int64?
-        
+    @ObservedObject var cardio: CardioDTO
+            
     var body: some View {
         Form {
             
-            NavigationLink(destination: CardioTypePickerView(selection: $cardio.cardioType)) {
+            NavigationLink(destination: IdentifiableLabelPickerView(selection: $cardio.cardioType, getAllFunction: CardioTypeDao.getAll, createFunction: CardioTypeDao.create, deleteFunction: CardioTypeDao.delete, warning: "Type can only be deleted if no workouts depend on it")) {
                 HStack {
                     Text("Cardio Type")
                     Spacer()
@@ -93,17 +94,17 @@ struct EditCardioView: View {
                 }
                 
             }
-//            NavigationLink(destination: TextFileMultiSelectionView(url: Cardio.getTagUrl(), creationPrompt: "Create New Tag", selection: $tags)) {
-//                HStack(spacing: 0.0) {
-//                    Text("Cardio Tags")
-//                    Spacer()
-//                    ForEach(tags, id: \.self) { tag in
-//                        Text(" " + tag)
-//                            .foregroundColor(Color(uiColor: UIColor.systemGray4))
-//                            .font(.caption2)
-//                    }
-//                }
-//            }
+            NavigationLink(destination: IdentifiableLabelMultiSelectionView(selection: $cardio.tags, getAllFunction: CardioTagDao.getAll, createFunction: CardioTagDao.create, deleteFunction: CardioTagDao.delete, warning: "Tag can only be deleted if no workouts depend on it")) {
+                HStack(spacing: 0.0) {
+                    Text("Cardio Tags")
+                    Spacer()
+                    ForEach(cardio.tags, id: \.id) { tag in
+                        Text(" " + tag.name)
+                            .foregroundColor(Color(uiColor: UIColor.systemGray4))
+                            .font(.caption2)
+                    }
+                }
+            }
             
             TextField("Duration", value: $cardio.duration, format: .number)
             TextField("Distance", value: $cardio.distance, format: .number)
@@ -118,8 +119,17 @@ struct EditCardioView: View {
                         do {
                             if cardio.cardioId == -1 {
                                 try CardioDao.create(cardio: cardio)
+                                workout.cardio.append(cardio)
+                                
                             } else {
                                 try CardioDao.update(cardio: cardio)
+                                for i in 0..<workout.cardio.count {
+                                    if (workout.cardio[i].cardioId == cardio.cardioId) {
+                                        workout.cardio[i] = cardio
+                                        break
+                                    }
+                                }
+                                
                             }
                             dismiss()
                         } catch {
@@ -128,114 +138,99 @@ struct EditCardioView: View {
                     }
                 }
             }
-        }
-    }
-}
-
-
-struct CardioTypePickerView: View {
-    @Environment(\.dismiss) var dismiss
-        
-    @State var options: [IdentifiableLabel] = []
-    
-    @Binding var selection: IdentifiableLabel
-    
-    @State var filter: String = ""
-    
-    @State private var sheetIsActive: Bool = false
-    
-    @State private var deleteConfirmation: Bool = false
-    
-    private func loadOptions() {
-        options = CardioTypeDao.getAll()
-    }
-    
-    func createNewType(name: String) -> String? {
-        do {
-            try CardioTypeDao.create(type: IdentifiableLabel(name: name))
-        } catch {
-            return error.localizedDescription
-        }
-        return nil
-    }
-    
-    var body: some View {
-        List {
-            Section {
-                HStack {
-                    Image(systemName: "magnifyingglass").opacity(0.3)
-                    TextField("Filter", text: $filter)
-                }
-            }
-            
-            ForEach(options) { option in
-                if filter == "" || option.name.lowercased().contains(filter.lowercased()) {
-                    Button(option.name) {
-                        selection = option
-                        dismiss()
+            ToolbarItem(placement: .bottomBar) {
+                if cardio.cardioId != -1 {
+                    Button("Delete") {
+                        do {
+                            try CardioDao.delete(id: cardio.cardioId)
+                            workout.cardio = workout.cardio.filter({ c in
+                                c.cardioId != cardio.cardioId
+                            })
+                            dismiss()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
                     }
+                    .foregroundColor(Color(uiColor: .systemRed))
                 }
             }
-            .onDelete { indexSet in
-                selection = options[indexSet.first!]
-                deleteConfirmation = true
-            }
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Create") {
-                    sheetIsActive = true
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) { EditButton() }
-        }
-        .onAppear { loadOptions() }
-        .sheet(isPresented: $sheetIsActive) { loadOptions() } content: {
-            IdentifiableLabelCreateView(isActive: $sheetIsActive, create: createNewType)
-        }
-        .alert("Confirm Delete", isPresented: $deleteConfirmation) {
-            Button("Delete Cardio Type", role: .destructive) {
-                do {
-                    try CardioTypeDao.delete(id: selection.id)
-                    print("deleted cardio type")
-                    selection = IdentifiableLabel()
-                    loadOptions()
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        } message: {
-            Text("Warning: Cardio Type will only be deleted if no workouts depend on it.")
         }
     }
 }
 
 
-struct IdentifiableLabelCreateView: View {
-    
-    @Binding var isActive: Bool
-    var create: (String) -> String?
-    @State var userInput: String = ""
-    
-    @State var errorMessage: String = ""
-    
-    var body: some View {
-        VStack {
-            TextField("Type Here", text: $userInput)
-                .font(.title)
-                .multilineTextAlignment(.center)
-                .onSubmit {
-                    errorMessage = ""
-                    if let error: String = create(userInput) {
-                        errorMessage = error
-                    } else {
-                        isActive = false
-                    }
-                    
-                }
-            Text(errorMessage).foregroundColor(Color(uiColor: .systemRed))
-        }
-        
-    }
-}
+//struct CardioTypePickerView: View {
+//    @Environment(\.dismiss) var dismiss
+//
+//    @State var options: [IdentifiableLabel] = []
+//
+//    @Binding var selection: IdentifiableLabel
+//
+//    @State var filter: String = ""
+//
+//    @State private var sheetIsActive: Bool = false
+//
+//    @State private var deleteConfirmation: Bool = false
+//
+//    private func loadOptions() {
+//        options = CardioTypeDao.getAll()
+//    }
+//
+//
+//    var body: some View {
+//        List {
+//            Section {
+//                HStack {
+//                    Image(systemName: "magnifyingglass").opacity(0.3)
+//                    TextField("Filter", text: $filter)
+//                }
+//            }
+//
+//            ForEach(options, id: \.id) { option in
+//                if filter == "" || option.name.lowercased().contains(filter.lowercased()) {
+//                    Button(option.name) {
+//                        selection = option
+//                        dismiss()
+//                    }
+//                }
+//            }
+//            .onDelete { indexSet in
+//                selection = options[indexSet.first!]
+//                deleteConfirmation = true
+//            }
+//        }
+//        .navigationBarTitleDisplayMode(.inline)
+//        .toolbar {
+//            ToolbarItem(placement: .navigationBarTrailing) {
+//                Button("Create") {
+//                    sheetIsActive = true
+//                }
+//            }
+//            ToolbarItem(placement: .navigationBarTrailing) { EditButton() }
+//        }
+//        .onAppear { loadOptions() }
+//        .sheet(isPresented: $sheetIsActive) { loadOptions() } content: {
+//            IdentifiableLabelCreateView(isActive: $sheetIsActive, create: CardioTypeDao.create)
+//        }
+//        .alert("Confirm Delete", isPresented: $deleteConfirmation) {
+//            Button("Delete Cardio Type", role: .destructive) {
+//                do {
+//                    try CardioTypeDao.delete(id: selection.id)
+//                    print("deleted cardio type")
+//                    selection = IdentifiableLabel()
+//                    loadOptions()
+//                } catch {
+//                    print(error.localizedDescription)
+//                }
+//            }
+//        } message: {
+//            Text("Warning: Cardio Type will only be deleted if no workouts depend on it.")
+//        }
+//    }
+//}
+
+
+
+
+
+

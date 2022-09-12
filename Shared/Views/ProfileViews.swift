@@ -60,6 +60,7 @@ struct ProfileSelectionView: View {
             }
         }
         .onAppear {
+            print("Pulled users from database")
             users = []
             users = UserDao.getAll()
             for i in 0..<selectedUsers.count {

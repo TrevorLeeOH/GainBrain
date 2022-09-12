@@ -7,46 +7,60 @@
 
 import Foundation
 
-class Session {
+class Session: ObservableObject {
     
-    static func createSession(workouts: [Int64]) {
-        let sessionUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Session")
-        let encoder = JSONEncoder()
+    @Published var workouts: [WorkoutDTO]
+    
+    init(workouts: [WorkoutDTO]) {
+        self.workouts = workouts
+    }
+    
+    
+    
+    static func createSession(users: [User], workoutType: IdentifiableLabel) throws -> Session {
         do {
-            let workoutData = try encoder.encode(workouts)
+            var workouts: [WorkoutDTO] = []
+            var workoutIds: [Int64] = []
+            
+            for i in 0..<users.count {
+                let workout = try WorkoutDao.create(workout: WorkoutDTO(user: users[i], workoutType: workoutType))
+                workouts.append(workout)
+                workoutIds.append(workout.workoutId)
+            }
+            
+            
+            let sessionUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Session")
+            let encoder = JSONEncoder()
+            let workoutData = try encoder.encode(workoutIds)
             try workoutData.write(to: sessionUrl)
-        } catch {
-            print(error.localizedDescription)
+            
+            return Session(workouts: workouts)
+            
         }
     }
     
-    static func getSession() -> [WorkoutDTO]? {
+    static func getSession() throws -> Session {
         print("called get session")
         
         let sessionUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Session")
         
         if FileManager.default.fileExists(atPath: sessionUrl.path) {
-            var workouts: [WorkoutDTO] = []
             do {
                 let sessionData: Data = try String(contentsOfFile: sessionUrl.path).data(using: .utf8)!
                 let decoder = JSONDecoder()
                 let workoutsIds: [Int64] = try decoder.decode([Int64].self, from: sessionData)
-                for id in workoutsIds {
-                    do {
-                        try workouts.append(WorkoutDao.get(workoutId: id))
-                    } catch {
-                        deleteSession()
-                        return nil
-                    }
-                    
+                
+                var workouts: [WorkoutDTO] = []
+                
+                for workoutId in workoutsIds {
+                    try workouts.append(WorkoutDao.get(workoutId: workoutId))
                 }
-            }  catch {
-                print(error.localizedDescription)
+                
+                return Session(workouts: workouts)
             }
-            return workouts
             
         } else {
-            return nil
+            throw NoSessionExistsError()
         }
     }
     
@@ -63,4 +77,9 @@ class Session {
             print(error.localizedDescription)
         }
     }
+}
+
+
+class NoSessionExistsError: Error {
+    
 }

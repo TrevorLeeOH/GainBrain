@@ -17,10 +17,10 @@ class WorkoutDTO: ObservableObject, Equatable {
     @Published var duration: TimeInterval
     @Published var caloriesBurned: Int?
     @Published var notes: String?
-    @Published var weightLifting: [WeightliftingDTO]
+    @Published var weightlifting: [WeightliftingDTO]
     @Published var cardio: [CardioDTO]
     
-    init(workoutId: Int64 = -1, user: User, workoutType: IdentifiableLabel, date: Date = Date.now, duration: TimeInterval = -1, caloriesBurned: Int? = nil, notes: String? = nil, weightLifting: [WeightliftingDTO] = [], cardio: [CardioDTO] = []) {
+    init(workoutId: Int64 = -1, user: User, workoutType: IdentifiableLabel, date: Date = Date.now, duration: TimeInterval = -1, caloriesBurned: Int? = nil, notes: String? = nil, weightlifting: [WeightliftingDTO] = [], cardio: [CardioDTO] = []) {
         self.workoutId = workoutId
         self.user = user
         self.workoutType = workoutType
@@ -28,7 +28,7 @@ class WorkoutDTO: ObservableObject, Equatable {
         self.duration = duration
         self.caloriesBurned = caloriesBurned
         self.notes = notes
-        self.weightLifting = weightLifting
+        self.weightlifting = weightlifting
         self.cardio = cardio
     }
     

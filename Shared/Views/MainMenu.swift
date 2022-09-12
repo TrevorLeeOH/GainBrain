@@ -72,6 +72,8 @@ struct MainMenuItemView: View {
 struct DebugView: View {
     @State var value: Int64 = -1
     
+    @State var selection: [IdentifiableLabel] = []
+    
     var body: some View {
         
         VStack {
@@ -108,7 +110,13 @@ struct DebugView: View {
                 } catch {
                     print(error.localizedDescription)
                 }
-            }
+            }.padding()
+            
+            Button("Update WL Set Table") {
+                Database.updateWLSetTable()
+            }.padding()
+                
+                   
             
             Button("delete ALL workouts") {
                 do {
@@ -117,7 +125,7 @@ struct DebugView: View {
                     print(error.localizedDescription)
                 }
                 
-            }
+            }.padding()
             
             
             Button("Print FilePath") {

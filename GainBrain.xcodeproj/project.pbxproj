@@ -34,10 +34,12 @@
 		69A3F9F428CA8A4D00410632 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A3F9F328CA8A4D00410632 /* Session.swift */; };
 		69C33F002881B9BC000CFFED /* CodableColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C33EFF2881B9BC000CFFED /* CodableColor.swift */; };
 		69C33F012881B9BC000CFFED /* CodableColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C33EFF2881B9BC000CFFED /* CodableColor.swift */; };
+		69C8B4FF28CE8081001BAC6B /* IdentifiableLabelViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C8B4FE28CE8081001BAC6B /* IdentifiableLabelViews.swift */; };
+		69C8B50028CE8081001BAC6B /* IdentifiableLabelViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C8B4FE28CE8081001BAC6B /* IdentifiableLabelViews.swift */; };
 		69CAB8FA28C15E64005ABD66 /* CardioViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8F928C15E64005ABD66 /* CardioViews.swift */; };
 		69CAB8FB28C15E64005ABD66 /* CardioViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8F928C15E64005ABD66 /* CardioViews.swift */; };
-		69CAB8FD28C15EB1005ABD66 /* WeightLiftingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8FC28C15EB1005ABD66 /* WeightLiftingViews.swift */; };
-		69CAB8FE28C15EB1005ABD66 /* WeightLiftingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8FC28C15EB1005ABD66 /* WeightLiftingViews.swift */; };
+		69CAB8FD28C15EB1005ABD66 /* WeightliftingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8FC28C15EB1005ABD66 /* WeightliftingViews.swift */; };
+		69CAB8FE28C15EB1005ABD66 /* WeightliftingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8FC28C15EB1005ABD66 /* WeightliftingViews.swift */; };
 		69CAB90028C15F84005ABD66 /* ProfileViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8FF28C15F84005ABD66 /* ProfileViews.swift */; };
 		69CAB90128C15F84005ABD66 /* ProfileViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CAB8FF28C15F84005ABD66 /* ProfileViews.swift */; };
 		69D126A8289EE48500C7DCA9 /* WorkoutDaoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D126A7289EE48500C7DCA9 /* WorkoutDaoView.swift */; };
@@ -99,8 +101,9 @@
 		699ED6872880E9AB00C47D6E /* WorkoutBuilderViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutBuilderViews.swift; sourceTree = "<group>"; };
 		69A3F9F328CA8A4D00410632 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		69C33EFF2881B9BC000CFFED /* CodableColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableColor.swift; sourceTree = "<group>"; };
+		69C8B4FE28CE8081001BAC6B /* IdentifiableLabelViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableLabelViews.swift; sourceTree = "<group>"; };
 		69CAB8F928C15E64005ABD66 /* CardioViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardioViews.swift; sourceTree = "<group>"; };
-		69CAB8FC28C15EB1005ABD66 /* WeightLiftingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightLiftingViews.swift; sourceTree = "<group>"; };
+		69CAB8FC28C15EB1005ABD66 /* WeightliftingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightliftingViews.swift; sourceTree = "<group>"; };
 		69CAB8FF28C15F84005ABD66 /* ProfileViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViews.swift; sourceTree = "<group>"; };
 		69D126A7289EE48500C7DCA9 /* WorkoutDaoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDaoView.swift; sourceTree = "<group>"; };
 		69DEAB1C287C691000410576 /* GainBrainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GainBrainApp.swift; sourceTree = "<group>"; };
@@ -194,9 +197,10 @@
 				69E19C7F287F227700187823 /* CreateWorkoutView.swift */,
 				69CAB8FF28C15F84005ABD66 /* ProfileViews.swift */,
 				699ED6872880E9AB00C47D6E /* WorkoutBuilderViews.swift */,
-				69CAB8FC28C15EB1005ABD66 /* WeightLiftingViews.swift */,
+				69CAB8FC28C15EB1005ABD66 /* WeightliftingViews.swift */,
 				69CAB8F928C15E64005ABD66 /* CardioViews.swift */,
 				69D126A7289EE48500C7DCA9 /* WorkoutDaoView.swift */,
+				69C8B4FE28CE8081001BAC6B /* IdentifiableLabelViews.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -427,6 +431,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69C8B4FF28CE8081001BAC6B /* IdentifiableLabelViews.swift in Sources */,
 				69E19C80287F227700187823 /* CreateWorkoutView.swift in Sources */,
 				694BA3C82881B47A00F73E01 /* CardioDTO.swift in Sources */,
 				697D8C0228C7FAB300DA8651 /* WeightliftingTypeDao.swift in Sources */,
@@ -436,7 +441,7 @@
 				69DEAB46287C691200410576 /* ContentView.swift in Sources */,
 				699ED6882880E9AB00C47D6E /* WorkoutBuilderViews.swift in Sources */,
 				695FE6EF287DAC3A00966B97 /* WorkoutDao.swift in Sources */,
-				69CAB8FD28C15EB1005ABD66 /* WeightLiftingViews.swift in Sources */,
+				69CAB8FD28C15EB1005ABD66 /* WeightliftingViews.swift in Sources */,
 				691BB7ED28C6ABE500B2A77E /* UserDao.swift in Sources */,
 				69DEAB59287C69BB00410576 /* MainMenu.swift in Sources */,
 				697D8BF828C7D7E800DA8651 /* WorkoutTypeDao.swift in Sources */,
@@ -470,7 +475,8 @@
 				69C33F012881B9BC000CFFED /* CodableColor.swift in Sources */,
 				69DEAB47287C691200410576 /* ContentView.swift in Sources */,
 				699ED6892880E9AB00C47D6E /* WorkoutBuilderViews.swift in Sources */,
-				69CAB8FE28C15EB1005ABD66 /* WeightLiftingViews.swift in Sources */,
+				69CAB8FE28C15EB1005ABD66 /* WeightliftingViews.swift in Sources */,
+				69C8B50028CE8081001BAC6B /* IdentifiableLabelViews.swift in Sources */,
 				69DEAB5A287C69BB00410576 /* MainMenu.swift in Sources */,
 				696F5B7528837C78004CE108 /* TextFileManager.swift in Sources */,
 				69D126A9289EE48500C7DCA9 /* WorkoutDaoView.swift in Sources */,

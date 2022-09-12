@@ -21,10 +21,14 @@ class CardioDao {
     static var resistance = Expression<Double?>("resistance")
     static var incline = Expression<Double?>("incline")
     
+    enum CardioDaoError: Error {
+        case CardioNotFound(cardioId: Int64)
+    }
+    
     static func create(cardio: CardioDTO) throws {
         do {
             let db = try Database.getDatabase()
-            try db.run(table.insert(
+            let cId = try db.run(table.insert(
                 workoutId <- cardio.workoutId,
                 cardioTypeId <- cardio.cardioType.id,
                 duration <- cardio.duration,
@@ -33,6 +37,20 @@ class CardioDao {
                 resistance <- cardio.resistance,
                 incline <- cardio.incline
             ))
+            try CardioTagDao.updateTagsForCardio(cardio: get(id: cId))
+        }
+    }
+    
+    static func get(id: Int64) throws -> CardioDTO {
+        do {
+            let db = try Database.getDatabase()
+            let rowSet = try db.prepareRowIterator(table.filter(cardioId == id))
+            let result = try Array(rowSet)
+            if result.count == 1 {
+                return try mapRowToCardioDTO(row: result.first!)
+            } else {
+                throw CardioDaoError.CardioNotFound(cardioId: id)
+            }
         }
     }
     
@@ -85,6 +103,15 @@ class CardioDao {
                                         speed <- cardio.speed,
                                         resistance <- cardio.resistance,
                                         incline <- cardio.incline))
+            try CardioTagDao.updateTagsForCardio(cardio: cardio)
+        }
+    }
+    
+    static func delete(id: Int64) throws {
+        do {
+            let db = try Database.getDatabase()
+            let cardioRow = table.filter(cardioId == id)
+            try db.run(cardioRow.delete())
         }
     }
     

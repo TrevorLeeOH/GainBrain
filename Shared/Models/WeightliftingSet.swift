@@ -13,11 +13,17 @@ class WeightliftingSet: ObservableObject {
     var weightliftingId: Int64
     @Published var reps: Int
     @Published var weight: Double
+    @Published var index: Int
     
-    init(weightliftingSetId: Int64 = -1, weightliftingId: Int64, reps: Int = 0, weight: Double = 0) {
+    init(weightliftingSetId: Int64 = -1, weightliftingId: Int64 = -1, reps: Int = 0, weight: Double = 0, index: Int = -1) {
         self.weightliftingSetId = weightliftingSetId
         self.weightliftingId = weightliftingId
         self.reps = reps
         self.weight = weight
+        self.index = index
+    }
+    
+    public func duplicate() -> WeightliftingSet {
+        return WeightliftingSet(weightliftingSetId: weightliftingSetId, weightliftingId: weightliftingId, reps: reps, weight: weight, index: index)
     }
 }
