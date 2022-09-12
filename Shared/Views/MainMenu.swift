@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import SQLite
 
-struct MainMenu: View {
+struct MainMenu: SwiftUI.View {
     
     @State var documentDirectory: String = "Document Directory Not Found"
         
-    var body: some View {
+    var body: some SwiftUI.View {
         
         NavigationView {
             VStack {
@@ -54,11 +55,11 @@ struct MainMenu: View {
 }
 
 
-struct MainMenuItemView: View {
+struct MainMenuItemView: SwiftUI.View {
     
     var view: AnyView
     
-    var body: some View {
+    var body: some SwiftUI.View {
         view
             .padding()
             .background {
@@ -69,12 +70,12 @@ struct MainMenuItemView: View {
 }
 
 
-struct DebugView: View {
+struct DebugView: SwiftUI.View {
     @State var value: Int64 = -1
     
     @State var selection: [IdentifiableLabel] = []
     
-    var body: some View {
+    var body: some SwiftUI.View {
         
         VStack {
             
@@ -112,8 +113,18 @@ struct DebugView: View {
                 }
             }.padding()
             
-            Button("Update WL Set Table") {
-                Database.updateWLSetTable()
+            Button("DO VERY SPECIFIC THING") {
+                
+                do {
+                    let db = try Database.getDatabase()
+                    let targetRow = Table("workout").filter(Expression<Int64>("workout_id") == 1)
+                    try db.run(targetRow.update(Expression<Int64>("workout_type_id") <- 1))
+                    
+                } catch {
+                    print(error.localizedDescription)
+                }
+                
+                
             }.padding()
                 
                    

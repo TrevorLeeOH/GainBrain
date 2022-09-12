@@ -21,7 +21,7 @@ class WeightliftingDao {
         case WeightliftingNotFound(id: Int64)
     }
     
-    static func create(wl: WeightliftingDTO) throws {
+    static func create(wl: WeightliftingDTO) throws -> WeightliftingDTO {
         do {
             let db = try Database.getDatabase()
             let wlId = try db.run(table.insert(
@@ -33,6 +33,7 @@ class WeightliftingDao {
             let newWl = try get(id: wlId)
             try WeightliftingTagDao.updateTagsForWeightlifting(weightlifting: newWl)
             try WeightliftingSetDao.updateAllForWeightlifting(wl: newWl)
+            return try get(id: wlId)
         }
     }
     
@@ -72,6 +73,16 @@ class WeightliftingDao {
                                         weightIsIndividual <- wl.weightIsIndividual))
             try WeightliftingTagDao.updateTagsForWeightlifting(weightlifting: wl)
             try WeightliftingSetDao.updateAllForWeightlifting(wl: wl)
+        }
+    }
+    
+    static func delete(id: Int64) throws {
+        do {
+            let db = try Database.getDatabase()
+            let targetRow = table.filter(weightliftingId == id)
+            try db.run(targetRow.delete())
+            try WeightliftingTagDao.deleteAllForWeightlifting(id: id)
+            try WeightliftingSetDao.deleteAllForWeightlifting(id: id)
         }
     }
     

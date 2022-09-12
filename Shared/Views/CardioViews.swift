@@ -118,8 +118,8 @@ struct EditCardioView: View {
                     Button("Done") {
                         do {
                             if cardio.cardioId == -1 {
-                                try CardioDao.create(cardio: cardio)
-                                workout.cardio.append(cardio)
+                                let newC = try CardioDao.create(cardio: cardio)
+                                workout.cardio.append(newC)
                                 
                             } else {
                                 try CardioDao.update(cardio: cardio)

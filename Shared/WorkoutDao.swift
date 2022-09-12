@@ -28,7 +28,12 @@ class WorkoutDao {
     static func create(workout: WorkoutDTO) throws -> WorkoutDTO {
         do {
             let db = try Database.getDatabase()
-            let newId = try db.run(table.insert(userId <- workout.user.userId, workoutTypeId <- workout.workoutType.id, date <- workout.date, duration <- workout.duration, caloriesBurned <- workout.caloriesBurned, notes <- workout.notes))
+            let newId = try db.run(table.insert(userId <- workout.user.userId,
+                                                workoutTypeId <- workout.workoutType.id,
+                                                date <- workout.date,
+                                                duration <- workout.duration,
+                                                caloriesBurned <- workout.caloriesBurned,
+                                                notes <- workout.notes))
             return try get(workoutId: newId)
         }
     }
@@ -59,6 +64,19 @@ class WorkoutDao {
         } catch {}
         
         return workouts
+    }
+    
+    //Only for workout table values -- does not update cardio or weightlifting
+    static func update(workout: WorkoutDTO) throws {
+        do {
+            let db = try Database.getDatabase()
+            let targetRow = table.filter(workoutId == workout.workoutId)
+            try db.run(targetRow.update(workoutTypeId <- workout.workoutType.id,
+                                        date <- workout.date,
+                                        duration <- workout.duration,
+                                        caloriesBurned <- workout.caloriesBurned,
+                                        notes <- workout.notes))
+        }
     }
     
     static func debugDeleteAll() throws {

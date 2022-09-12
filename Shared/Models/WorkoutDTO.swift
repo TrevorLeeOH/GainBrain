@@ -36,8 +36,41 @@ class WorkoutDTO: ObservableObject, Equatable {
         return lhs.workoutId == rhs.workoutId
     }
     
+    public func duplicate() -> WorkoutDTO {
+        return WorkoutDTO(workoutId: workoutId, user: user, workoutType: workoutType, date: date, duration: duration, caloriesBurned: caloriesBurned, notes: notes, weightlifting: weightlifting, cardio: cardio)
+    }
+    
 }
 
+extension Double {
+    func TimeIntervalDescription() -> String {
+        var dur = self
+        var hours: Int = 0
+        var minutes: Int = 0
+        var seconds: Int = 0
+
+        while (dur >= 3600) {
+            hours += 1
+            dur -= 3600
+        }
+        while (dur >= 60) {
+            minutes += 1
+            dur -= 60
+        }
+        while (dur > 0) {
+            seconds += 1
+            dur -= 1
+        }
+
+        let hoursStr = hours > 0 ? String(hours) + " hrs, " : ""
+        let minutesStr = minutes > 0 ? String(hours) + " min, " : ""
+        let secondsStr = String(seconds) + " sec"
+
+        return hoursStr + minutesStr + secondsStr;
+    }
+    
+    
+}
 
 
 

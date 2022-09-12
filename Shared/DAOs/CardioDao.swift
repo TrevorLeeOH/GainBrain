@@ -25,7 +25,7 @@ class CardioDao {
         case CardioNotFound(cardioId: Int64)
     }
     
-    static func create(cardio: CardioDTO) throws {
+    static func create(cardio: CardioDTO) throws -> CardioDTO {
         do {
             let db = try Database.getDatabase()
             let cId = try db.run(table.insert(
@@ -38,6 +38,8 @@ class CardioDao {
                 incline <- cardio.incline
             ))
             try CardioTagDao.updateTagsForCardio(cardio: get(id: cId))
+            
+            return try get(id: cId)
         }
     }
     
@@ -112,6 +114,7 @@ class CardioDao {
             let db = try Database.getDatabase()
             let cardioRow = table.filter(cardioId == id)
             try db.run(cardioRow.delete())
+            try CardioTagDao.deleteAllForCardio(id: id)
         }
     }
     

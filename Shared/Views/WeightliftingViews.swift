@@ -117,8 +117,8 @@ struct EditWeightliftingView: View {
                     Button("Done") {
                         do {
                             if weightlifting.weightliftingId == -1 {
-                                try WeightliftingDao.create(wl: weightlifting)
-                                workout.weightlifting.append(weightlifting)
+                                let newWl = try WeightliftingDao.create(wl: weightlifting)
+                                workout.weightlifting.append(newWl)
                             } else {
                                 try WeightliftingDao.update(wl: weightlifting)
                                 for i in 0..<workout.weightlifting.count {
@@ -133,6 +133,22 @@ struct EditWeightliftingView: View {
                             print(error.localizedDescription)
                         }
                     }
+                }
+            }
+            ToolbarItem(placement: .bottomBar) {
+                if weightlifting.weightliftingId != -1 {
+                    Button("Delete") {
+                        do {
+                            try WeightliftingDao.delete(id: weightlifting.weightliftingId)
+                            workout.weightlifting = workout.weightlifting.filter({ wl in
+                                wl.weightliftingId != weightlifting.weightliftingId
+                            })
+                            dismiss()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
+                    .foregroundColor(Color(uiColor: .systemRed))
                 }
             }
         }

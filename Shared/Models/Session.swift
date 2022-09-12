@@ -39,6 +39,22 @@ class Session: ObservableObject {
         }
     }
     
+    static func updateSession(session: Session) throws {
+        do {
+            let sessionUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Session")
+            
+            var workoutIds: [Int64] = []
+            
+            for workout in session.workouts {
+                workoutIds.append(workout.workoutId)
+            }
+            
+            let encoder = JSONEncoder()
+            let workoutData = try encoder.encode(workoutIds)
+            try workoutData.write(to: sessionUrl)
+        }
+    }
+    
     static func getSession() throws -> Session {
         print("called get session")
         
@@ -69,12 +85,10 @@ class Session: ObservableObject {
         return FileManager.default.fileExists(atPath: sessionUrl.path)
     }
     
-    static func deleteSession() {
+    static func deleteSession() throws {
         let sessionUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Session")
         do {
             try FileManager.default.removeItem(at: sessionUrl)
-        } catch {
-            print(error.localizedDescription)
         }
     }
 }

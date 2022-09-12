@@ -60,6 +60,7 @@
 		69DEAB5D287C6A9300410576 /* WorkoutDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69DEAB5B287C6A9300410576 /* WorkoutDTO.swift */; };
 		69E19C80287F227700187823 /* CreateWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E19C7F287F227700187823 /* CreateWorkoutView.swift */; };
 		69E19C81287F227700187823 /* CreateWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E19C7F287F227700187823 /* CreateWorkoutView.swift */; };
+		69E46D0E28CFD99E0075B3AF /* TimeIntervalStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E46D0D28CFD99E0075B3AF /* TimeIntervalStruct.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,6 +122,7 @@
 		69DEAB58287C69BB00410576 /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
 		69DEAB5B287C6A9300410576 /* WorkoutDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDTO.swift; sourceTree = "<group>"; };
 		69E19C7F287F227700187823 /* CreateWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateWorkoutView.swift; sourceTree = "<group>"; };
+		69E46D0D28CFD99E0075B3AF /* TimeIntervalStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalStruct.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +170,7 @@
 				691BB7EE28C6B06A00B2A77E /* User.swift */,
 				697D8BF528C7D71300DA8651 /* IdentifiableLabel.swift */,
 				69A3F9F328CA8A4D00410632 /* Session.swift */,
+				69E46D0D28CFD99E0075B3AF /* TimeIntervalStruct.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -443,6 +446,7 @@
 				695FE6EF287DAC3A00966B97 /* WorkoutDao.swift in Sources */,
 				69CAB8FD28C15EB1005ABD66 /* WeightliftingViews.swift in Sources */,
 				691BB7ED28C6ABE500B2A77E /* UserDao.swift in Sources */,
+				69E46D0E28CFD99E0075B3AF /* TimeIntervalStruct.swift in Sources */,
 				69DEAB59287C69BB00410576 /* MainMenu.swift in Sources */,
 				697D8BF828C7D7E800DA8651 /* WorkoutTypeDao.swift in Sources */,
 				696F5B7428837C78004CE108 /* TextFileManager.swift in Sources */,
