@@ -30,9 +30,9 @@ class WeightliftingDao {
                 weightIsOffset <- wl.weightIsOffset,
                 weightIsIndividual <- wl.weightIsIndividual))
             
-            let newWl = try get(id: wlId)
-            try WeightliftingTagDao.updateTagsForWeightlifting(weightlifting: newWl)
-            try WeightliftingSetDao.updateAllForWeightlifting(wl: newWl)
+            try WeightliftingSetDao.updateAllForWeightlifting(id: wlId, sets: wl.sets)
+            try WeightliftingTagDao.updateAllForWeightlifting(id: wlId, tags: wl.tags)
+            
             return try get(id: wlId)
         }
     }
@@ -71,8 +71,9 @@ class WeightliftingDao {
             try db.run(wlRow.update(weightliftingTypeId <- wl.weightliftingType.id,
                                         weightIsOffset <- wl.weightIsOffset,
                                         weightIsIndividual <- wl.weightIsIndividual))
-            try WeightliftingTagDao.updateTagsForWeightlifting(weightlifting: wl)
-            try WeightliftingSetDao.updateAllForWeightlifting(wl: wl)
+            
+            try WeightliftingTagDao.updateAllForWeightlifting(id: wl.weightliftingId, tags: wl.tags)
+            try WeightliftingSetDao.updateAllForWeightlifting(id: wl.weightliftingId, sets: wl.sets)
         }
     }
     
@@ -83,6 +84,19 @@ class WeightliftingDao {
             try db.run(targetRow.delete())
             try WeightliftingTagDao.deleteAllForWeightlifting(id: id)
             try WeightliftingSetDao.deleteAllForWeightlifting(id: id)
+        }
+    }
+    
+    static func deleteAllForWorkout(id: Int64) throws {
+        do {
+            let db = try Database.getDatabase()
+            let targetRows = table.filter(workoutId == id)
+            let rowSet = try db.prepareRowIterator(targetRows.select(weightliftingId))
+            for row in try Array(rowSet) {
+                try WeightliftingTagDao.deleteAllForWeightlifting(id: row[weightliftingId])
+                try WeightliftingSetDao.deleteAllForWeightlifting(id: row[weightliftingId])
+            }
+            try db.run(targetRows.delete())
         }
     }
     

@@ -26,4 +26,8 @@ class WeightliftingSet: ObservableObject {
     public func duplicate() -> WeightliftingSet {
         return WeightliftingSet(weightliftingSetId: weightliftingSetId, weightliftingId: weightliftingId, reps: reps, weight: weight, index: index)
     }
+    
+    public func toString() -> String {
+        return "id: \(weightliftingSetId), wl id: \(weightliftingId), reps: \(reps), weight: \(weight), index: \(index)"
+    }
 }

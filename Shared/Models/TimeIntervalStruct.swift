@@ -32,7 +32,7 @@ class TimeIntervalClass: ObservableObject {
             minutes += 1
             dur -= 60
         }
-        while (dur > 0) {
+        while (dur >= 1) {
             seconds += 1
             dur -= 1
         }

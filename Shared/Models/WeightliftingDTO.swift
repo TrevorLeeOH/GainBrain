@@ -35,5 +35,15 @@ class WeightliftingDTO: ObservableObject, Equatable {
         return WeightliftingDTO(weightliftingId: weightliftingId, workoutId: workoutId, weightliftingType: weightliftingType, tags: tags, sets: sets, weightIsOffset: weightIsOffset, weightIsIndividual: weightIsIndividual)
     }
     
+    public func toString() -> String {
+        
+        var setString = ""
+        
+        for s in sets {
+            setString.append("(\(s.toString())), ")
+        }
+        return "id: \(weightliftingId), workout id: \(workoutId), type: (\(weightliftingType.toString())), sets: \(setString), offset?: \(weightIsOffset), Ind?: \(weightIsIndividual)"
+    }
+    
 }
 

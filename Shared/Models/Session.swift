@@ -62,7 +62,7 @@ class Session: ObservableObject {
         
         if FileManager.default.fileExists(atPath: sessionUrl.path) {
             do {
-                let sessionData: Data = try String(contentsOfFile: sessionUrl.path).data(using: .utf8)!
+                let sessionData: Data = try Data(contentsOf: sessionUrl)
                 let decoder = JSONDecoder()
                 let workoutsIds: [Int64] = try decoder.decode([Int64].self, from: sessionData)
                 
@@ -81,6 +81,7 @@ class Session: ObservableObject {
     }
     
     static func sessionExists() -> Bool {
+        print("called Session Exists")
         let sessionUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Session")
         return FileManager.default.fileExists(atPath: sessionUrl.path)
     }

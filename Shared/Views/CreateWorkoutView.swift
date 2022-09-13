@@ -12,8 +12,7 @@ struct CreateWorkoutView: View {
     @State private var type: IdentifiableLabel = IdentifiableLabel()
     @State private var selectedUsers: [User] = []
     
-    @State private var session: Session = Session(workouts: [])
-    @State private var creatingWorkout: Bool = false
+    @Binding var creatingWorkout: Bool
     
     
     
@@ -40,32 +39,19 @@ struct CreateWorkoutView: View {
                         }
                     }
                 }
-                if Session.sessionExists() {
-                    Button("Resume Previous Workout") {
-                        do {
-                            session = try Session.getSession()
-                            creatingWorkout = true
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                        
-                    }
-                }
-                
-                
             }
-            
-            
-            
-            NavigationLink(destination: WorkoutViewMaster(session: session, dismissParent: dismiss).navigationBarBackButtonHidden(true), isActive: $creatingWorkout) {EmptyView()}
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if type.id != -1 && selectedUsers.count > 0 {
                     Button("Let's Do This!") {
                         do {
-                            session = try Session.createSession(users: selectedUsers, workoutType: type)
-                            creatingWorkout = true
+                            let _ = try Session.createSession(users: selectedUsers, workoutType: type)
+                            dismiss()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                creatingWorkout = true
+                            }
+                            
                         } catch {
                             print(error.localizedDescription)
                         }

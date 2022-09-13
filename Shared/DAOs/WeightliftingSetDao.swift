@@ -37,15 +37,25 @@ class WeightliftingSetDao {
             
         } catch {}
         
+        weightliftingSets.sort {
+            $0.index < $1.index
+        }
+        
         return weightliftingSets
     }
     
-    static func updateAllForWeightlifting(wl: WeightliftingDTO) throws {
+    static func updateAllForWeightlifting(id: Int64, sets: [WeightliftingSet]) throws {
+        print("called updateAllForWeightlifting on SetDao")
+        
+        
         do {
-            try deleteAllForWeightlifting(id: wl.weightliftingId)
-            for index in 0..<wl.sets.count {
-                wl.sets[index].index = index
-                try create(wSet: wl.sets[index])
+            try deleteAllForWeightlifting(id: id)
+            for index in 0..<sets.count {
+                sets[index].index = index
+                sets[index].weightliftingId = id
+                print("New Set:")
+                print(sets[index].toString())
+                try create(wSet: sets[index])
             }
         }
     }

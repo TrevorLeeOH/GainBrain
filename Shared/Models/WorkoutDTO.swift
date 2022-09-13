@@ -40,6 +40,10 @@ class WorkoutDTO: ObservableObject, Equatable {
         return WorkoutDTO(workoutId: workoutId, user: user, workoutType: workoutType, date: date, duration: duration, caloriesBurned: caloriesBurned, notes: notes, weightlifting: weightlifting, cardio: cardio)
     }
     
+    public func toString() -> String {
+        return "id: \(workoutId), user: \(user.name), type: \(workoutType.name), date: \(date.description), duration: \(TimeIntervalClass(timeInterval: duration).toString())"
+    }
+    
 }
 
 extension Double {

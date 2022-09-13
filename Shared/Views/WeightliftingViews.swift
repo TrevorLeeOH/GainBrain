@@ -117,7 +117,11 @@ struct EditWeightliftingView: View {
                     Button("Done") {
                         do {
                             if weightlifting.weightliftingId == -1 {
+                                print("creating new weightlifting")
+                                print(weightlifting.toString())
                                 let newWl = try WeightliftingDao.create(wl: weightlifting)
+                                print("new weightlifting:")
+                                print(newWl.toString())
                                 workout.weightlifting.append(newWl)
                             } else {
                                 try WeightliftingDao.update(wl: weightlifting)

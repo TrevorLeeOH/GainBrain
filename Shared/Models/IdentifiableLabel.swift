@@ -22,4 +22,8 @@ class IdentifiableLabel: Equatable {
         return lhs.id == rhs.id
     }
     
+    public func toString() -> String {
+        return "id: \(id), name: \(name)"
+    }
+    
 }

@@ -118,6 +118,21 @@ class CardioDao {
         }
     }
     
+    static func deleteAllForWorkout(id: Int64) throws {
+        do {
+            let db = try Database.getDatabase()
+
+            
+            let targetRows = table.filter(workoutId == id)
+            
+            let rowSet = try db.prepareRowIterator(targetRows.select(cardioId))
+            for row in try Array(rowSet) {
+                try CardioTagDao.deleteAllForCardio(id: row[cardioId])
+            }
+            try db.run(targetRows.delete())
+        }
+    }
+    
     static func mapRowToCardioDTO(row: RowIterator.Element) throws -> CardioDTO {
         return try CardioDTO(cardioId: row[cardioId],
                              workoutId: row[workoutId],

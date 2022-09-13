@@ -12,9 +12,7 @@ struct WorkoutViewMaster: View {
     @Environment(\.dismiss) var dismiss
     
     var session: Session
-    
-    var dismissParent: DismissAction
-    
+        
     func removeProfile(user: User) {
         session.workouts = session.workouts.filter { w in
             return w.user != user
@@ -23,9 +21,6 @@ struct WorkoutViewMaster: View {
             if session.workouts.isEmpty {
                 try Session.deleteSession()
                 dismiss()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    dismissParent()
-                }
             } else {
                 try Session.updateSession(session: session)
             }
@@ -35,7 +30,6 @@ struct WorkoutViewMaster: View {
     }
 
     var body: some View {
-        EmptyView()
         TabView {
             ForEach(session.workouts, id: \.workoutId) { workout in
                 WorkoutBuilderView(removeProfile: removeProfile)
@@ -83,6 +77,11 @@ struct WorkoutBuilderView: View {
                 .background(workout.user.getColor())
             
             List {
+                Button("Print weightlifting") {
+                    for x in workout.weightlifting {
+                        print(x.toString())
+                    }
+                }
                 Section(header: Text("Weightlifting")) {
                     ForEach(workout.weightlifting, id: \.weightliftingId) { wl in
                         Button {
@@ -318,8 +317,13 @@ struct FinishWorkoutView: View {
                 }
                 Spacer()
                 Button("Save And Exit") {
+                    print(workout.date.description)
+                    print(workout.date.distance(to: Date.now))
                     workout.notes = notes == "" ? nil : notes
                     workout.caloriesBurned = caloriesBurned
+                    if workout.duration == -1 {
+                        workout.duration = workout.date.distance(to: Date.now)
+                    }
                     do {
                         try WorkoutDao.update(workout: workout)
                         isPresented = false
@@ -335,8 +339,14 @@ struct FinishWorkoutView: View {
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
             Button("Discard Workout", role: .destructive) {
-                isPresented = false
-                removeProfile(workout.user)
+                do {
+                    try WorkoutDao.delete(id: workout.workoutId)
+                    isPresented = false
+                    removeProfile(workout.user)
+                } catch {
+                    print(error.localizedDescription)
+                }
+                    
             }
             .padding()
         }

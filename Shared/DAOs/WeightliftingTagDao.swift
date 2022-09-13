@@ -76,12 +76,12 @@ class WeightliftingTagDao {
         }
     }
     
-    static func updateTagsForWeightlifting(weightlifting: WeightliftingDTO) throws {
+    static func updateAllForWeightlifting(id: Int64, tags: [IdentifiableLabel]) throws {
         do {
             let db = try Database.getDatabase()
-            try deleteAllForWeightlifting(id: weightlifting.weightliftingId)
-            for tag in weightlifting.tags {
-                try db.run(weightliftingWeightliftingTagTable.insert(weightliftingId <- weightlifting.weightliftingId, weightliftingTagId <- tag.id))
+            try deleteAllForWeightlifting(id: id)
+            for tag in tags {
+                try db.run(weightliftingWeightliftingTagTable.insert(weightliftingId <- id, weightliftingTagId <- tag.id))
             }
         }
     }

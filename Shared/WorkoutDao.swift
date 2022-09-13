@@ -52,14 +52,14 @@ class WorkoutDao {
         }
     }
     
-    static func getAllForUser(userId: Int64) -> [Workout] {
-        var workouts: [Workout] = []
+    static func getAllForUser(userId: Int64) -> [WorkoutDTO] {
+        var workouts: [WorkoutDTO] = []
         
         do {
             let db = try Database.getDatabase()
             let rowSet = try db.prepareRowIterator(table.filter(self.userId == userId))
             for row in try Array(rowSet) {
-                workouts.append(mapRowToWorkout(row: row))
+                try workouts.append(mapRowToWorkoutDTO(row: row))
             }
         } catch {}
         
@@ -86,7 +86,16 @@ class WorkoutDao {
         }
     }
     
-    
+    static func delete(id: Int64) throws {
+        do {
+            let db = try Database.getDatabase()
+            let targetRow = table.filter(workoutId == id)
+            try CardioDao.deleteAllForWorkout(id: id)
+            try WeightliftingDao.deleteAllForWorkout(id: id)
+            try db.run(targetRow.delete())
+            
+        }
+    }
     
     static func mapRowToWorkout(row: RowIterator.Element) -> Workout {
         return Workout(workoutId: row[workoutId],

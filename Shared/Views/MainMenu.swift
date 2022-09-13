@@ -9,13 +9,21 @@ import SwiftUI
 import SQLite
 
 struct MainMenu: SwiftUI.View {
+    @Environment(\.dismiss) var dismiss
     
     @State var documentDirectory: String = "Document Directory Not Found"
+    
+    @State var sessionExists: Bool = false
+    @State var creatingWorkout: Bool = false
+    
+    @State private var session: Session = Session(workouts: [])
         
     var body: some SwiftUI.View {
         
         NavigationView {
             VStack {
+                NavigationLink(destination: WorkoutViewMaster(session: session).navigationBarBackButtonHidden(true), isActive: $creatingWorkout) {EmptyView()}
+                
                 Text("Gain Brain")
                     .font(.largeTitle)
                     .bold()
@@ -24,11 +32,16 @@ struct MainMenu: SwiftUI.View {
                 
                 VStack(spacing: 32) {
                     
-                    MainMenuItemView(view: AnyView(NavigationLink(destination: CreateWorkoutView().navigationTitle("Create New Workout")) {
-                        Text("Start Workout")
-                    }))
+                    if sessionExists {
+                        MainMenuItemView(view: AnyView(Button("Resume Workout") { creatingWorkout = true }))
+                    } else {
+                        MainMenuItemView(view: AnyView(NavigationLink(destination: CreateWorkoutView(creatingWorkout: $creatingWorkout).navigationTitle("Create New Workout")) {
+                            Text("Start Workout")
+                        }))
+                    }
                     
-                    MainMenuItemView(view: AnyView(NavigationLink(destination: EmptyView()) {
+                    
+                    MainMenuItemView(view: AnyView(NavigationLink(destination: TempViewWorkoutView()) {
                         Text("View Workouts")
                     }))
                     
@@ -48,6 +61,17 @@ struct MainMenu: SwiftUI.View {
                         .onAppear {
                             documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.path
                         }
+                }
+            }
+            .onAppear {
+                print("Appeared")
+                sessionExists = Session.sessionExists()
+                if sessionExists {
+                    do {
+                        session = try Session.getSession()
+                    } catch {
+                        print(error.localizedDescription)
+                    }
                 }
             }
         }
@@ -155,5 +179,40 @@ struct DebugView: SwiftUI.View {
 
 
 
-
+struct TempViewWorkoutView: SwiftUI.View {
+    
+    @State var workouts: [WorkoutDTO] = []
+    
+    var body: some SwiftUI.View {
+        List {
+            ForEach(workouts, id: \.workoutId) { w in
+                VStack {
+                    
+                    HStack {
+                        Text("Workout Id: \(w.workoutId)")
+                        Text("Type: \(w.workoutType.name)")
+                    }
+                    Text("User: \(w.user.name)")
+                    Text("Date: \(w.date.description)")
+                    Text("Duration: \(TimeIntervalClass(timeInterval: w.duration).toString())")
+                    Text("Calories burned: \(w.caloriesBurned != nil ? String(w.caloriesBurned!) : "N/A")")
+                    Text("Notes: \(w.notes != nil ? String(w.notes!) : "N/A")")
+                    
+                }
+                
+            }
+            
+//            "workout id: \(workoutId), user id: \(userId), workout type id: \(workoutTypeId), date: \(date), duration: \(duration), calories burned: \(caloriesBurned ?? -1), notes: \(notes ?? "")"
+        }
+        .onAppear {
+            let users = UserDao.getAll()
+            for user in users {
+                let userWorkouts = WorkoutDao.getAllForUser(userId: user.userId)
+                workouts.append(contentsOf: userWorkouts)
+            }
+        }
+        
+        
+    }
+}
 
