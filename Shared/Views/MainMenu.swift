@@ -14,15 +14,17 @@ struct MainMenu: SwiftUI.View {
     @State var documentDirectory: String = "Document Directory Not Found"
     
     @State var sessionExists: Bool = false
-    @State var creatingWorkout: Bool = false
+    @State var navSwitch: String?
     
     @State private var session: Session = Session(workouts: [])
-        
+            
     var body: some SwiftUI.View {
         
         NavigationView {
             VStack {
-                NavigationLink(destination: WorkoutViewMaster(session: session).navigationBarBackButtonHidden(true), isActive: $creatingWorkout) {EmptyView()}
+                NavigationLink(destination: WorkoutViewMaster(session: session).navigationBarBackButtonHidden(true), tag: "CREATE_WORKOUT", selection: $navSwitch) {EmptyView()}
+                
+                
                 
                 Text("Gain Brain")
                     .font(.largeTitle)
@@ -33,17 +35,19 @@ struct MainMenu: SwiftUI.View {
                 VStack(spacing: 32) {
                     
                     if sessionExists {
-                        MainMenuItemView(view: AnyView(Button("Resume Workout") { creatingWorkout = true }))
+                        MainMenuItemView(view: AnyView(Button("Resume Workout") { navSwitch = "CREATE_WORKOUT" }))
                     } else {
-                        MainMenuItemView(view: AnyView(NavigationLink(destination: CreateWorkoutView(creatingWorkout: $creatingWorkout).navigationTitle("Create New Workout")) {
+                        MainMenuItemView(view: AnyView(NavigationLink(destination: CreateWorkoutView(parentNavSwitch: $navSwitch).navigationTitle("Create New Workout")) {
                             Text("Start Workout")
                         }))
                     }
                     
                     
-                    MainMenuItemView(view: AnyView(NavigationLink(destination: TempViewWorkoutView()) {
-                        Text("View Workouts")
-                    }))
+                    MainMenuItemView(view: AnyView(
+                        NavigationLink(destination: WorkoutLogProfilePickerView().navigationTitle("Select Profile"), label: {
+                            Text("View Workouts")
+                        })
+                    ))
                     
                     MainMenuItemView(view: AnyView(NavigationLink(destination: DebugView()) {
                         Text("Debug")
@@ -203,19 +207,7 @@ struct TempViewWorkoutView: SwiftUI.View {
                         selectedWorkout = w
                         editingWorkout = true
                     } label: {
-                        VStack {
-                            
-                            HStack {
-                                Text("Workout Id: \(w.workoutId)")
-                                Text("Type: \(w.workoutType.name)")
-                            }
-                            Text("User: \(w.user.name)")
-                            Text("Date: \(w.date.toLocalFormattedString())")
-                            Text("Duration: \(TimeIntervalClass(timeInterval: w.duration).toString())")
-                            Text("Calories burned: \(w.caloriesBurned != nil ? String(w.caloriesBurned!) : "N/A")")
-                            Text("Notes: \(w.notes != nil ? String(w.notes!) : "N/A")")
-                            
-                        }
+                        WorkoutMinimalView(workout: w)
                         
                     }
                     

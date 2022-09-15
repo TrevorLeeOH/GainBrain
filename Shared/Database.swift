@@ -28,14 +28,13 @@ class Database {
                 try FileManager.default.removeItem(atPath: dbPath)
             } catch {
                 print(error.localizedDescription)
+                return
             }
             
         }
         
-        let db: Connection
-        
         do {
-            db = try Connection(documentDirectory.appendingPathComponent("db.sqlite3").path)
+            let db = try getDatabase()
             
             
             //User Table

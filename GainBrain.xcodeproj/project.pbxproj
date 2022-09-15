@@ -64,6 +64,10 @@
 		69E19C80287F227700187823 /* CreateWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E19C7F287F227700187823 /* CreateWorkoutView.swift */; };
 		69E19C81287F227700187823 /* CreateWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E19C7F287F227700187823 /* CreateWorkoutView.swift */; };
 		69E46D0E28CFD99E0075B3AF /* TimeIntervalClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E46D0D28CFD99E0075B3AF /* TimeIntervalClass.swift */; };
+		69FF5C6F28D3CF0300C57983 /* WorkoutMinimalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF5C6E28D3CF0300C57983 /* WorkoutMinimalView.swift */; };
+		69FF5C7028D3CF0300C57983 /* WorkoutMinimalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF5C6E28D3CF0300C57983 /* WorkoutMinimalView.swift */; };
+		69FF5C7228D3D1EA00C57983 /* WorkoutLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF5C7128D3D1EA00C57983 /* WorkoutLogView.swift */; };
+		69FF5C7328D3D1EA00C57983 /* WorkoutLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FF5C7128D3D1EA00C57983 /* WorkoutLogView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +132,8 @@
 		69DEAB5B287C6A9300410576 /* WorkoutDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDTO.swift; sourceTree = "<group>"; };
 		69E19C7F287F227700187823 /* CreateWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateWorkoutView.swift; sourceTree = "<group>"; };
 		69E46D0D28CFD99E0075B3AF /* TimeIntervalClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalClass.swift; sourceTree = "<group>"; };
+		69FF5C6E28D3CF0300C57983 /* WorkoutMinimalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutMinimalView.swift; sourceTree = "<group>"; };
+		69FF5C7128D3D1EA00C57983 /* WorkoutLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutLogView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,6 +216,8 @@
 				69CAB8F928C15E64005ABD66 /* CardioViews.swift */,
 				69D126A7289EE48500C7DCA9 /* WorkoutDaoView.swift */,
 				69C8B4FE28CE8081001BAC6B /* IdentifiableLabelViews.swift */,
+				69FF5C6E28D3CF0300C57983 /* WorkoutMinimalView.swift */,
+				69FF5C7128D3D1EA00C57983 /* WorkoutLogView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -361,7 +369,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1320;
-				LastUpgradeCheck = 1320;
+				LastUpgradeCheck = 1340;
 				TargetAttributes = {
 					69DEAB22287C691200410576 = {
 						CreatedOnToolsVersion = 13.2.1;
@@ -444,6 +452,7 @@
 				69C8B4FF28CE8081001BAC6B /* IdentifiableLabelViews.swift in Sources */,
 				69E19C80287F227700187823 /* CreateWorkoutView.swift in Sources */,
 				694BA3C82881B47A00F73E01 /* CardioDTO.swift in Sources */,
+				69FF5C6F28D3CF0300C57983 /* WorkoutMinimalView.swift in Sources */,
 				696EB4C128D39B7400915563 /* SessionDao.swift in Sources */,
 				697D8C0228C7FAB300DA8651 /* WeightliftingTypeDao.swift in Sources */,
 				69CAB8FA28C15E64005ABD66 /* CardioViews.swift in Sources */,
@@ -455,6 +464,7 @@
 				69CAB8FD28C15EB1005ABD66 /* WeightliftingViews.swift in Sources */,
 				691BB7ED28C6ABE500B2A77E /* UserDao.swift in Sources */,
 				69E46D0E28CFD99E0075B3AF /* TimeIntervalClass.swift in Sources */,
+				69FF5C7228D3D1EA00C57983 /* WorkoutLogView.swift in Sources */,
 				69DEAB59287C69BB00410576 /* MainMenu.swift in Sources */,
 				697D8BF828C7D7E800DA8651 /* WorkoutTypeDao.swift in Sources */,
 				696F5B7428837C78004CE108 /* TextFileManager.swift in Sources */,
@@ -491,11 +501,13 @@
 				69CAB8FE28C15EB1005ABD66 /* WeightliftingViews.swift in Sources */,
 				69C8B50028CE8081001BAC6B /* IdentifiableLabelViews.swift in Sources */,
 				69DEAB5A287C69BB00410576 /* MainMenu.swift in Sources */,
+				69FF5C7028D3CF0300C57983 /* WorkoutMinimalView.swift in Sources */,
 				696F5B7528837C78004CE108 /* TextFileManager.swift in Sources */,
 				69D126A9289EE48500C7DCA9 /* WorkoutDaoView.swift in Sources */,
 				69CAB90128C15F84005ABD66 /* ProfileViews.swift in Sources */,
 				694BA3C62881B46D00F73E01 /* WeightliftingDTO.swift in Sources */,
 				69DEAB45287C691200410576 /* GainBrainApp.swift in Sources */,
+				69FF5C7328D3D1EA00C57983 /* WorkoutLogView.swift in Sources */,
 				696EB4C228D3A1E700915563 /* Database.swift in Sources */,
 				69DEAB5D287C6A9300410576 /* WorkoutDTO.swift in Sources */,
 			);
@@ -713,6 +725,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -741,6 +754,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;

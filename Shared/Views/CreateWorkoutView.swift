@@ -12,7 +12,7 @@ struct CreateWorkoutView: View {
     @State private var type: IdentifiableLabel = IdentifiableLabel()
     @State private var selectedUsers: [User] = []
     
-    @Binding var creatingWorkout: Bool
+    @Binding var parentNavSwitch: String?
     
     
     
@@ -49,7 +49,7 @@ struct CreateWorkoutView: View {
                             let _ = try SessionDao.createSession(users: selectedUsers, workoutType: type)
                             dismiss()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                creatingWorkout = true
+                                parentNavSwitch = nil
                             }
                             
                         } catch {
