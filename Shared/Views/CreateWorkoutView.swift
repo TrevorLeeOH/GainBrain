@@ -46,7 +46,7 @@ struct CreateWorkoutView: View {
                 if type.id != -1 && selectedUsers.count > 0 {
                     Button("Let's Do This!") {
                         do {
-                            let _ = try Session.createSession(users: selectedUsers, workoutType: type)
+                            let _ = try SessionDao.createSession(users: selectedUsers, workoutType: type)
                             dismiss()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                 creatingWorkout = true

@@ -44,7 +44,7 @@ class TimeIntervalClass: ObservableObject {
     
     func toString() -> String {
         let hoursStr = hours > 0 ? String(hours) + " hrs, " : ""
-        let minutesStr = minutes > 0 ? String(hours) + " min, " : ""
+        let minutesStr = minutes > 0 ? String(minutes) + " min, " : ""
         let secondsStr = String(seconds) + " sec"
 
         return hoursStr + minutesStr + secondsStr;

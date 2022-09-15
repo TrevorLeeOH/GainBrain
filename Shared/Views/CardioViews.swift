@@ -115,7 +115,7 @@ struct EditCardioView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if cardio.cardioType.id != -1 {
-                    Button("Done") {
+                    Button("Save Changes") {
                         do {
                             if cardio.cardioId == -1 {
                                 let newC = try CardioDao.create(cardio: cardio)

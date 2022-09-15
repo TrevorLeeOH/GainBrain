@@ -19,10 +19,10 @@ struct WorkoutViewMaster: View {
         }
         do {
             if session.workouts.isEmpty {
-                try Session.deleteSession()
+                try SessionDao.deleteSession()
                 dismiss()
             } else {
-                try Session.updateSession(session: session)
+                try SessionDao.updateSession(session: session)
             }
         } catch {
             print(error.localizedDescription)
@@ -46,7 +46,10 @@ struct WorkoutViewMaster: View {
 }
 
 struct WorkoutBuilderView: View {
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var workout: WorkoutDTO
+    
+    var inSession: Bool = true
     
     var removeProfile: (User) -> Void
     
@@ -57,6 +60,8 @@ struct WorkoutBuilderView: View {
     @State private var navigationSwitch: String?
     
     @State private var refresh: Bool = false
+    
+    @State private var showDeleteConfirmation: Bool = false
     
     private func loadExercises() {
         print("refreshed")
@@ -70,90 +75,133 @@ struct WorkoutBuilderView: View {
             NavigationLink(destination: EditCardioView(cardio: cardioTemplate).environmentObject(workout), tag: "EDIT_CARDIO", selection: $navigationSwitch) { EmptyView() }
             NavigationLink(destination: EditWorkoutPropertiesView().environmentObject(workout), tag: "EDIT_WORKOUT", selection: $navigationSwitch) { EmptyView() }
             
-            Text(workout.user.name)
-                .font(.title)
-                .frame(maxWidth: .infinity)
-                .padding(.bottom)
-                .background(workout.user.getColor())
             
-            List {
-                Button("Print weightlifting") {
-                    for x in workout.weightlifting {
-                        print(x.toString())
-                    }
+            VStack(spacing: 0.0) {
+                Text(workout.user.name)
+                    .font(.largeTitle)
+                    .frame(maxWidth: .infinity)
+                    .padding(8.0)
+                
+                Rectangle().fill(Color(uiColor: .systemBackground)).frame(height: 1.0)
+                
+                HStack(spacing: 0.0) {
+                    Text(workout.workoutType.name)
+                        .font(.headline)
+                    Spacer()
+                    Text(workout.date.toLocalFormattedString())
+                        .font(.subheadline)
+                        .italic()
                 }
-                Section(header: Text("Weightlifting")) {
-                    ForEach(workout.weightlifting, id: \.weightliftingId) { wl in
+                .padding(.top, 8.0)
+                .padding(.horizontal, 24.0)
+                Button {
+                    navigationSwitch = "EDIT_WORKOUT"
+                } label: {
+                    Text("Edit Workout Properties")
+                        .font(.caption)
+                }
+                .padding(8.0)
+                
+                Rectangle().fill(Color(uiColor: .systemBackground)).frame(height: 1.0)
+                
+                List {
+                    Section(header: Text("Weightlifting")) {
+                        ForEach(workout.weightlifting, id: \.weightliftingId) { wl in
+                            Button {
+                                weightliftingTemplate = wl.duplicate()
+                                navigationSwitch = "EDIT_WEIGHTLIFTING"
+                            } label: {
+                                WeightLiftingMinimalView(weightLifting: wl, refresh: $refresh)
+                            }
+                        }
                         Button {
-                            weightliftingTemplate = wl.duplicate()
+                            weightliftingTemplate = WeightliftingDTO(weightliftingId: -2)
+                            weightliftingTemplate = WeightliftingDTO(workoutId: workout.workoutId)
                             navigationSwitch = "EDIT_WEIGHTLIFTING"
                         } label: {
-                            WeightLiftingMinimalView(weightLifting: wl, refresh: $refresh)
+                            HStack {
+                                Image(systemName: "plus.circle")
+                                    .foregroundColor(.accentColor)
+                                Text("Add weightlifting")
+                                    .foregroundColor(.accentColor)
+                            }
                         }
-                    }
-                    Button {
-                        weightliftingTemplate = WeightliftingDTO(workoutId: workout.workoutId)
-                        navigationSwitch = "EDIT_WEIGHTLIFTING"
-                    } label: {
-                        HStack {
-                            Image(systemName: "plus.circle")
-                                .foregroundColor(.accentColor)
-                            Text("Add weightlifting")
-                                .foregroundColor(.accentColor)
-                        }
-                    }
 
-                }
-                Section(header: Text("Cardio")) {
-                    ForEach(workout.cardio, id: \.cardioId) { cardio in
+                    }
+                    Section(header: Text("Cardio")) {
+                        ForEach(workout.cardio, id: \.cardioId) { cardio in
+                            Button {
+                                cardioTemplate = cardio.duplicate()
+                                navigationSwitch = "EDIT_CARDIO"
+                            } label: {
+                                CardioMinimalView(cardio: cardio, refresh: $refresh)
+                            }
+                        }
                         Button {
-                            cardioTemplate = cardio.duplicate()
+                            cardioTemplate = CardioDTO(cardioId: -2)
+                            cardioTemplate = CardioDTO(workoutId: workout.workoutId)
                             navigationSwitch = "EDIT_CARDIO"
                         } label: {
-                            CardioMinimalView(cardio: cardio, refresh: $refresh)
+                            HStack {
+                                Image(systemName: "plus.circle")
+                                    .foregroundColor(.accentColor)
+                                Text("Add cardio")
+                                    .foregroundColor(.accentColor)
+                            }
                         }
                     }
+                }
+                .cornerRadius(16.0)
+                .padding(.vertical, 4.0)
+                
+                if inSession {
+                    Rectangle().fill(Color(uiColor: .systemBackground)).frame(height: 1.0)
+                    
                     Button {
-                        cardioTemplate = CardioDTO(workoutId: workout.workoutId)
-                        navigationSwitch = "EDIT_CARDIO"
+                        showFinishWorkoutSheet = true
                     } label: {
-                        HStack {
-                            Image(systemName: "plus.circle")
-                                .foregroundColor(.accentColor)
-                            Text("Add cardio")
-                                .foregroundColor(.accentColor)
-                        }
+                        Text("Finish Workout")
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 26.0)
                     }
+                    .padding(.horizontal, 20.0)
+                    .padding(.vertical, 8.0)
+                    .font(.headline)
+                    .buttonStyle(.bordered)
+                    .buttonBorderShape(.roundedRectangle(radius: 10.0))
+                } else {
+                    Button("Delete Workout", role: .destructive) {
+                        showDeleteConfirmation = true
+                    }
+                    .padding(8.0)
                 }
-                
-                Button("Edit Workout Properties") {
-                    navigationSwitch = "EDIT_WORKOUT"
-                }
-                
             }
-            .overlay {
-                RoundedRectangle(cornerRadius: 16.0).stroke(workout.user.getColor(), lineWidth: 8.0)
-            }
-            .padding(4.0)
-            .border(workout.user.getColor(), width: 6.0)
-            
-            Button("Finish Workout") {
-                showFinishWorkoutSheet = true
-            }
-            .padding(10)
-            .font(.headline)
-            .buttonStyle(.bordered)
-            .buttonBorderShape(.capsule)
-            Rectangle().fill(Color(UIColor.systemGray))
-                .frame(height: 1.0)
+            .background(Color(uiColor: .secondarySystemBackground))
+            .cornerRadius(16.0)
+            .padding(.horizontal, 8.0)
+            .padding(.vertical, 8.0)
         }
+        .background(workout.user.getColor())
+        .padding(.bottom, 1.0)
         .onAppear {
             loadExercises()
         }
         .sheet(isPresented: $showFinishWorkoutSheet) {
             
         } content: {
-            FinishWorkoutView(isPresented: $showFinishWorkoutSheet, removeProfile: removeProfile).environmentObject(workout)
+            FinishWorkoutView(isPresented: $showFinishWorkoutSheet, removeProfile: removeProfile)
+        }
+        .alert("Confirmation", isPresented: $showDeleteConfirmation) { //not available during sessions
+            Button("Delete", role: .destructive) {
+                do {
+                    try WorkoutDao.delete(id: workout.workoutId)
+                    dismiss()
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        } message: {
+            Text("Permanently delete workout?")
         }
     }
 }
@@ -165,6 +213,9 @@ struct EditWorkoutPropertiesView: View {
     @State var workoutType: IdentifiableLabel = IdentifiableLabel()
     @State var notes: String = ""
     @State var caloriesBurned: Int?
+    @State var date: Date = Date.now
+    @StateObject var duration: TimeIntervalClass = TimeIntervalClass()
+    @State var showAlert: Bool = false
     
     var body: some View {
         Form {
@@ -179,55 +230,9 @@ struct EditWorkoutPropertiesView: View {
                 }
             }
             
-            TextEditor(text: $notes)
-            
             TextField("Calories Burned", value: $caloriesBurned, format: .number)
             
-            NavigationLink(destination: EditWorkoutDatesAndTimes().environmentObject(workout)) {
-                Text("Edit Dates/Times")
-            }
             
-            
-        }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                if workoutType.id != -1 {
-                    Button("Save Changes") {
-                        let workoutToSave = workout.duplicate()
-                        workoutToSave.workoutType = workoutType
-                        workoutToSave.notes = notes
-                        workoutToSave.caloriesBurned = caloriesBurned
-                        do {
-                            try WorkoutDao.update(workout: workoutToSave)
-                            workout.workoutType = workoutType
-                            workout.notes = notes
-                            workout.caloriesBurned = caloriesBurned
-                            dismiss()
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                    }
-                }
-            }
-        }
-        .onAppear {
-            workoutType = workout.workoutType
-            notes = workout.notes ?? ""
-            caloriesBurned = workout.caloriesBurned
-        }
-    }
-}
-
-struct EditWorkoutDatesAndTimes: View {
-    @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var workout: WorkoutDTO
-    
-    @State var date: Date = Date()
-    @StateObject var duration: TimeIntervalClass = TimeIntervalClass()
-    @State var showAlert: Bool = false
-
-    var body: some View {
-        Form {
             DatePicker("Date/Time", selection: $date, displayedComponents: [.date, .hourAndMinute])
             HStack {
                 Text("Duration:")
@@ -250,41 +255,65 @@ struct EditWorkoutDatesAndTimes: View {
             }
             .multilineTextAlignment(.center)
             
+            Section(header: Text("Notes")) {
+                TextEditor(text: $notes)
+                    .frame(height: 200)
+            }
+            
+            
+            
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                if workoutType.id != -1 {
+                    Button("Save Changes") {
+                        showAlert = true
+                    }
+                }
+            }
+        }
+        .onAppear {
+            workoutType = workout.workoutType
+            notes = workout.notes ?? ""
+            caloriesBurned = workout.caloriesBurned
+            date = workout.date
+            if workout.duration != 0.0 {
+                duration.hours = Int(workout.duration / 3600.0)
+                duration.minutes = Int(workout.duration / 60.0)
+                duration.seconds = Int(workout.duration / 3600.0)
+            }
         }
         .alert("Caution", isPresented: $showAlert) {
-            Button("Set Custom Dates/Times", role: .destructive) {
+            Button("Save Changes", role: .destructive) {
                 let workoutToSave = workout.duplicate()
+                workoutToSave.workoutType = workoutType
+                workoutToSave.notes = notes
+                workoutToSave.caloriesBurned = caloriesBurned
                 workoutToSave.date = date
-                workoutToSave.duration = duration.toTimeInterval()
+                if workout.duration != 0.0 {
+                    workoutToSave.duration = duration.toTimeInterval()
+                }
                 do {
                     try WorkoutDao.update(workout: workoutToSave)
+                    workout.workoutType = workoutType
+                    workout.notes = notes
+                    workout.caloriesBurned = caloriesBurned
                     workout.date = date
-                    workout.duration = duration.toTimeInterval()
+                    if workout.duration != 0.0 {
+                        workout.duration = duration.toTimeInterval()
+                    }
                     dismiss()
                 } catch {
                     print(error.localizedDescription)
                 }
             }
         } message: {
-            Text("Start date/time and duration are automatically set when creating and finishing a workout. Editing these values here will overwrite that process.")
-        }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Save Changes") {
-                    showAlert = true
-                }
-            }
-        }
-        .onAppear {
-            date = workout.date
-            if workout.duration != -1 {
-                duration.hours = Int(workout.duration / 3600)
-                duration.minutes = Int(workout.duration / 60)
-                duration.seconds = Int(workout.duration / 3600)
-            }
+            Text("Duration is automatically set upon finishing a workout. Editing the duration here will override that process.")
         }
     }
 }
+
+
 
 struct FinishWorkoutView: View {
     @Binding var isPresented: Bool
@@ -294,11 +323,6 @@ struct FinishWorkoutView: View {
     
     @State var notes: String = ""
     @State var caloriesBurned: Int?
-    
-    func saveWorkout() throws {
-        //code here
-        
-    }
     
     var body: some View {
         VStack {
@@ -317,11 +341,9 @@ struct FinishWorkoutView: View {
                 }
                 Spacer()
                 Button("Save And Exit") {
-                    print(workout.date.description)
-                    print(workout.date.distance(to: Date.now))
                     workout.notes = notes == "" ? nil : notes
                     workout.caloriesBurned = caloriesBurned
-                    if workout.duration == -1 {
+                    if workout.duration == 0.0 {
                         workout.duration = workout.date.distance(to: Date.now)
                     }
                     do {

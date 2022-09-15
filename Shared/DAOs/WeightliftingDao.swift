@@ -64,7 +64,7 @@ class WeightliftingDao {
         return wls
     }
     
-    static func update(wl: WeightliftingDTO) throws {
+    static func update(wl: WeightliftingDTO) throws -> WeightliftingDTO {
         do {
             let db = try Database.getDatabase()
             let wlRow = table.filter(weightliftingId == wl.weightliftingId)
@@ -74,6 +74,8 @@ class WeightliftingDao {
             
             try WeightliftingTagDao.updateAllForWeightlifting(id: wl.weightliftingId, tags: wl.tags)
             try WeightliftingSetDao.updateAllForWeightlifting(id: wl.weightliftingId, sets: wl.sets)
+            
+            return try get(id: wl.weightliftingId)
         }
     }
     

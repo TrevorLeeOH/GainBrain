@@ -65,10 +65,10 @@ struct MainMenu: SwiftUI.View {
             }
             .onAppear {
                 print("Appeared")
-                sessionExists = Session.sessionExists()
+                sessionExists = SessionDao.sessionExists()
                 if sessionExists {
                     do {
-                        session = try Session.getSession()
+                        session = try SessionDao.getSession()
                     } catch {
                         print(error.localizedDescription)
                     }
@@ -182,35 +182,61 @@ struct DebugView: SwiftUI.View {
 struct TempViewWorkoutView: SwiftUI.View {
     
     @State var workouts: [WorkoutDTO] = []
+    @State var selectedWorkout: WorkoutDTO?
+    @State var editingWorkout: Bool = false
+    
+    private func doNothing(user: User) {
+        
+    }
     
     var body: some SwiftUI.View {
-        List {
-            ForEach(workouts, id: \.workoutId) { w in
-                VStack {
-                    
-                    HStack {
-                        Text("Workout Id: \(w.workoutId)")
-                        Text("Type: \(w.workoutType.name)")
+        Group {
+            if let workout = selectedWorkout {
+                NavigationLink(destination: WorkoutBuilderView(inSession: false, removeProfile: doNothing).environmentObject(workout).navigationBarTitleDisplayMode(.inline), isActive: $editingWorkout) {
+                    EmptyView()
+                }
+            }
+            
+            List {
+                ForEach(workouts, id: \.workoutId) { w in
+                    Button {
+                        selectedWorkout = w
+                        editingWorkout = true
+                    } label: {
+                        VStack {
+                            
+                            HStack {
+                                Text("Workout Id: \(w.workoutId)")
+                                Text("Type: \(w.workoutType.name)")
+                            }
+                            Text("User: \(w.user.name)")
+                            Text("Date: \(w.date.toLocalFormattedString())")
+                            Text("Duration: \(TimeIntervalClass(timeInterval: w.duration).toString())")
+                            Text("Calories burned: \(w.caloriesBurned != nil ? String(w.caloriesBurned!) : "N/A")")
+                            Text("Notes: \(w.notes != nil ? String(w.notes!) : "N/A")")
+                            
+                        }
+                        
                     }
-                    Text("User: \(w.user.name)")
-                    Text("Date: \(w.date.description)")
-                    Text("Duration: \(TimeIntervalClass(timeInterval: w.duration).toString())")
-                    Text("Calories burned: \(w.caloriesBurned != nil ? String(w.caloriesBurned!) : "N/A")")
-                    Text("Notes: \(w.notes != nil ? String(w.notes!) : "N/A")")
+                    
+                    
                     
                 }
                 
             }
+            .frame(height: 300)
             
-//            "workout id: \(workoutId), user id: \(userId), workout type id: \(workoutTypeId), date: \(date), duration: \(duration), calories burned: \(caloriesBurned ?? -1), notes: \(notes ?? "")"
-        }
-        .onAppear {
-            let users = UserDao.getAll()
-            for user in users {
-                let userWorkouts = WorkoutDao.getAllForUser(userId: user.userId)
-                workouts.append(contentsOf: userWorkouts)
+            
+            .onAppear {
+                workouts = []
+                let users = UserDao.getAll()
+                for user in users {
+                    let userWorkouts = WorkoutDao.getAllForUser(userId: user.userId)
+                    workouts.append(contentsOf: userWorkouts)
+                }
             }
         }
+        
         
         
     }

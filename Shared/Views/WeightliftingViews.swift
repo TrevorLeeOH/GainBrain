@@ -114,20 +114,16 @@ struct EditWeightliftingView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if weightlifting.weightliftingType.id != -1 {
-                    Button("Done") {
+                    Button("Save Changes") {
                         do {
                             if weightlifting.weightliftingId == -1 {
-                                print("creating new weightlifting")
-                                print(weightlifting.toString())
                                 let newWl = try WeightliftingDao.create(wl: weightlifting)
-                                print("new weightlifting:")
-                                print(newWl.toString())
                                 workout.weightlifting.append(newWl)
                             } else {
-                                try WeightliftingDao.update(wl: weightlifting)
+                                let newWl = try WeightliftingDao.update(wl: weightlifting)
                                 for i in 0..<workout.weightlifting.count {
                                     if (workout.weightlifting[i].weightliftingId == weightlifting.weightliftingId) {
-                                        workout.weightlifting[i] = weightlifting
+                                        workout.weightlifting[i] = newWl
                                         break
                                     }
                                 }
