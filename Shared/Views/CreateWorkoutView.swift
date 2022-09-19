@@ -14,29 +14,26 @@ struct CreateWorkoutView: View {
     
     @Binding var parentNavSwitch: String?
     
-    
-    
     var body: some View {
-        Group {
-            Form {
-                NavigationLink(destination: IdentifiableLabelPickerView(selection: $type, getAllFunction: WorkoutTypeDao.getAll, createFunction: WorkoutTypeDao.create, deleteFunction: WorkoutTypeDao.delete, warning: "Warning: Workout Type will only be deleted if no Workouts depend on it.")) {
-                    HStack {
-                        Text("Workout Type:")
-                        Spacer()
-                        Text(type.name)
-                            .foregroundColor(Color(UIColor.systemGray4))
-                    }
+        
+        Form {
+            NavigationLink(destination: IdentifiableLabelPickerView(selection: $type, getAllFunction: WorkoutTypeDao.getAll, createFunction: WorkoutTypeDao.create, deleteFunction: WorkoutTypeDao.delete, warning: "Warning: Workout Type will only be deleted if no Workouts depend on it.")) {
+                HStack {
+                    Text("Workout Type:")
+                    Spacer()
+                    Text(type.name)
+                        .foregroundColor(Color(UIColor.systemGray4))
                 }
-                
-                NavigationLink(destination: ProfileSelectionView(selectedUsers: $selectedUsers)) {
-                    HStack {
-                        Text("Who Is Working Out?")
-                        Spacer()
-                        ForEach(selectedUsers, id: \.userId) { user in
-                            Text(user.name.prefix(1))
-                                .font(.headline)
-                                .foregroundColor(user.getColor())
-                        }
+            }
+            
+            NavigationLink(destination: ProfileSelectionView(selectedUsers: $selectedUsers)) {
+                HStack {
+                    Text("Who Is Working Out?")
+                    Spacer()
+                    ForEach(selectedUsers, id: \.userId) { user in
+                        Text(user.name.prefix(1))
+                            .font(.headline)
+                            .foregroundColor(user.getColor())
                     }
                 }
             }
@@ -48,8 +45,8 @@ struct CreateWorkoutView: View {
                         do {
                             let _ = try SessionDao.createSession(users: selectedUsers, workoutType: type)
                             dismiss()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                parentNavSwitch = nil
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                                parentNavSwitch = "CREATE_WORKOUT"
                             }
                             
                         } catch {

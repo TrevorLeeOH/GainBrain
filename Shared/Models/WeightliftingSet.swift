@@ -30,4 +30,10 @@ class WeightliftingSet: ObservableObject {
     public func toString() -> String {
         return "id: \(weightliftingSetId), wl id: \(weightliftingId), reps: \(reps), weight: \(weight), index: \(index)"
     }
+    
+    public func weightToString() -> String {
+        return Config.instance.metricWeights ?
+        String(round(weight.lbsToKg() * 10) / 10.0) + " kg"
+        : String(round(weight * 10) / 10.0) + " lbs"
+    }
 }

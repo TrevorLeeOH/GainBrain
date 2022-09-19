@@ -26,13 +26,16 @@ struct IdentifiableLabelPickerView: View {
     
     var body: some View {
         List {
+            Button("Debug") {
+                deleteConfirmation = true
+            }
             Section {
                 HStack {
                     Image(systemName: "magnifyingglass").opacity(0.3)
                     TextField("Filter", text: $filter)
                 }
             }
-            
+
             ForEach(options, id: \.id) { option in
                 if filter == "" || option.name.lowercased().contains(filter.lowercased()) {
                     Button(option.name) {
@@ -45,19 +48,6 @@ struct IdentifiableLabelPickerView: View {
                 selection = options[indexSet.first!]
                 deleteConfirmation = true
             }
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Create") {
-                    sheetIsActive = true
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) { EditButton() }
-        }
-        .onAppear { options = getAllFunction() }
-        .sheet(isPresented: $sheetIsActive) { options = getAllFunction() } content: {
-            IdentifiableLabelCreateView(isActive: $sheetIsActive, create: createFunction)
         }
         .alert("Are You Sure?", isPresented: $deleteConfirmation) {
             Button("Delete", role: .destructive) {
@@ -73,6 +63,20 @@ struct IdentifiableLabelPickerView: View {
         } message: {
             Text(warning)
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Create") {
+                    sheetIsActive = true
+                }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) { EditButton() }
+        }
+        .onAppear { options = getAllFunction() }
+        .sheet(isPresented: $sheetIsActive) { options = getAllFunction() } content: {
+            IdentifiableLabelCreateView(isActive: $sheetIsActive, create: createFunction)
+        }
+        
     }
 }
 
@@ -82,7 +86,6 @@ struct IdentifiableLabelCreateView: View {
     @Binding var isActive: Bool
     var create: (IdentifiableLabel) throws -> Void
     @State var userInput: String = ""
-    
     @State var errorMessage: String = ""
     
     var body: some View {

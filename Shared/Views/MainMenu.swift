@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SQLite
 
 struct MainMenu: SwiftUI.View {
     @Environment(\.dismiss) var dismiss
@@ -49,23 +48,17 @@ struct MainMenu: SwiftUI.View {
                         })
                     ))
                     
+                    MainMenuItemView(view: AnyView(NavigationLink(destination: SettingsView()) {
+                        Text("Settings")
+                    }))
+                    
                     MainMenuItemView(view: AnyView(NavigationLink(destination: DebugView()) {
                         Text("Debug")
                     }))
-                    
+
                 }
                 .font(.title)
-                
-                
                 Spacer()
-                    
-                ScrollView(Axis.Set.horizontal) {
-                    Text(documentDirectory)
-                        .padding()
-                        .onAppear {
-                            documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.path
-                        }
-                }
             }
             .onAppear {
                 print("Appeared")
@@ -79,6 +72,7 @@ struct MainMenu: SwiftUI.View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
     }
 }
 
@@ -103,11 +97,21 @@ struct DebugView: SwiftUI.View {
     
     @State var selection: [IdentifiableLabel] = []
     
+    
     var body: some SwiftUI.View {
         
         VStack {
             
             TextField("enter value", value: $value, format: .number)
+            
+            
+            Button("test rounding") {
+                print("\(1.23456) text")
+                print("\(round(1.23456 * 100) / 100.0) text")
+            }
+            
+            Text("\(1.23456) text")
+            Text(String(round(1.23456 * 100) / 100.0))
             
             
             Button("Init Database") {
@@ -133,28 +137,6 @@ struct DebugView: SwiftUI.View {
             }
             .padding()
             
-            Button("Delete ALL cardio") {
-                do {
-                    try CardioDao.debugDeleteAll()
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }.padding()
-            
-            Button("DO VERY SPECIFIC THING") {
-                
-                do {
-                    let db = try Database.getDatabase()
-                    let targetRow = Table("workout").filter(Expression<Int64>("workout_id") == 1)
-                    try db.run(targetRow.update(Expression<Int64>("workout_type_id") <- 1))
-                    
-                } catch {
-                    print(error.localizedDescription)
-                }
-                
-                
-            }.padding()
-                
                    
             
             Button("delete ALL workouts") {
@@ -178,6 +160,49 @@ struct DebugView: SwiftUI.View {
     }
     
 }
+
+
+struct dismissDebugView: View {
+    
+    
+    var body: some View {
+        
+            NavigationLink(destination: Debuggeronie()) {
+                Text("debuggerionie")
+            }
+        
+        
+        
+        
+        
+        
+    }
+}
+
+
+struct Debuggeronie: View {
+    
+    
+    @State private var showAlert: Bool = false
+    
+    var body: some View {
+        VStack {
+            Button("Debug") {
+                showAlert = true
+            }
+
+        }
+        .alert("Are You Sure?", isPresented: $showAlert) {
+            Button("Delete", role: .destructive) {
+                print("deleted")
+            }
+        } message: {
+            Text("Howdy doody")
+        }
+        
+    }
+}
+
 
 
 

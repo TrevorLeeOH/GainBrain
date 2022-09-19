@@ -234,26 +234,7 @@ struct EditWorkoutPropertiesView: View {
             
             
             DatePicker("Date/Time", selection: $date, displayedComponents: [.date, .hourAndMinute])
-            HStack {
-                Text("Duration:")
-                VStack {
-                    Text("Hours")
-                        .font(.caption)
-                    TextField("Hours", value: $duration.hours, format: .number)
-                }
-                VStack {
-                    Text("Minutes")
-                        .font(.caption)
-                    TextField("Minutes", value: $duration.minutes, format: .number)
-                }
-                VStack {
-                    Text("Seconds")
-                        .font(.caption)
-                    TextField("Seconds", value: $duration.seconds, format: .number)
-                        
-                }
-            }
-            .multilineTextAlignment(.center)
+            TimeIntervalPicker(timeInterval: duration)
             
             Section(header: Text("Notes")) {
                 TextEditor(text: $notes)

@@ -19,7 +19,10 @@ struct WeightLiftingMinimalView: View {
             ForEach(weightLifting.sets, id: \.weightliftingSetId) { wSet in
                 VStack {
                     Text(String(wSet.reps))
-                    Text(String((weightLifting.weightIsOffset && wSet.weight >= 0 ? "+" : "") + String(wSet.weight)))
+                    Text(
+                        String(weightLifting.weightIsOffset && wSet.weight >= 0 ? "+" : "")
+                        + wSet.weightToString()
+                    )
                 }
             }
         }
@@ -82,7 +85,7 @@ struct EditWeightliftingView: View {
                         } label: {
                             HStack {
                                 Text(String(wlSet.reps))
-                                Text(String((weightlifting.weightIsOffset && wlSet.weight >= 0 ? "+" : "") + String(wlSet.weight)))
+                                Text(String(weightlifting.weightIsOffset && wlSet.weight >= 0 ? "+" : "") + wlSet.weightToString())
                             }
                         }
                         
@@ -160,16 +163,29 @@ struct EditWeightliftingSetView: View {
     @ObservedObject var weightlifting: WeightliftingDTO
     @ObservedObject var wlSet: WeightliftingSet
     
+    @State var reps: Int?
+    @State var weight: Double?
+    
     var body: some View {
         VStack {
-            TextField("Enter Reps", value: $wlSet.reps, format: .number)
+            TextField("Enter Reps", value: $reps, format: .number)
                 .multilineTextAlignment(.center)
-            TextField("Enter Weight", value: $wlSet.weight, format: .number)
+                .keyboardType(.numberPad)
+            TextField("Enter Weight", value: $weight, format: .number)
+                .keyboardType(.decimalPad)
                 .multilineTextAlignment(.center)
             Button("Done") {
+                wlSet.reps = reps!
+                wlSet.weight = Config.instance.metricWeights ? weight!.kgToLbs() : weight!
                 dismiss()
             }
-            .foregroundColor(wlSet.reps != 0 && wlSet.weight != 0 ? .accentColor : Color(UIColor.systemGray4))
+            .disabled(reps == nil || weight == nil)
+            .foregroundColor(reps != 0 && weight != 0 ? .accentColor : Color(UIColor.systemGray4))
+        }
+        .onAppear {
+            let objWeight = Config.instance.metricWeights ? wlSet.weight.lbsToKg() : wlSet.weight
+            weight = objWeight == 0 ? nil : objWeight
+            reps = wlSet.reps == 0 ? nil : wlSet.reps
         }
         .font(.title)
     }

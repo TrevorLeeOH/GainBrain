@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		691BB7ED28C6ABE500B2A77E /* UserDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691BB7EC28C6ABE500B2A77E /* UserDao.swift */; };
 		691BB7EF28C6B06A00B2A77E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691BB7EE28C6B06A00B2A77E /* User.swift */; };
+		6924127D28D8E7B3002E2212 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6924127C28D8E7B3002E2212 /* Config.swift */; };
+		6924127E28D8E7B3002E2212 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6924127C28D8E7B3002E2212 /* Config.swift */; };
+		6924128028D8EBED002E2212 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6924127F28D8EBED002E2212 /* SettingsView.swift */; };
+		6924128128D8EBED002E2212 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6924127F28D8EBED002E2212 /* SettingsView.swift */; };
+		6924128328D8FDC5002E2212 /* TimeIntervalPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6924128228D8FDC5002E2212 /* TimeIntervalPicker.swift */; };
+		6924128428D8FDC5002E2212 /* TimeIntervalPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6924128228D8FDC5002E2212 /* TimeIntervalPicker.swift */; };
 		6940232628C3D4DB0086430B /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 6940232528C3D4DB0086430B /* SQLite */; };
 		6940232B28C3DF6A0086430B /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6940232A28C3DF6A0086430B /* Database.swift */; };
 		694BA3C52881B46D00F73E01 /* WeightliftingDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 694BA3C42881B46D00F73E01 /* WeightliftingDTO.swift */; };
@@ -90,6 +96,9 @@
 /* Begin PBXFileReference section */
 		691BB7EC28C6ABE500B2A77E /* UserDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDao.swift; sourceTree = "<group>"; };
 		691BB7EE28C6B06A00B2A77E /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		6924127C28D8E7B3002E2212 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		6924127F28D8EBED002E2212 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		6924128228D8FDC5002E2212 /* TimeIntervalPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalPicker.swift; sourceTree = "<group>"; };
 		6940232A28C3DF6A0086430B /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Database.swift; path = Shared/Database.swift; sourceTree = SOURCE_ROOT; };
 		694BA3C42881B46D00F73E01 /* WeightliftingDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightliftingDTO.swift; sourceTree = "<group>"; };
 		694BA3C72881B47A00F73E01 /* CardioDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardioDTO.swift; sourceTree = "<group>"; };
@@ -218,6 +227,8 @@
 				69C8B4FE28CE8081001BAC6B /* IdentifiableLabelViews.swift */,
 				69FF5C6E28D3CF0300C57983 /* WorkoutMinimalView.swift */,
 				69FF5C7128D3D1EA00C57983 /* WorkoutLogView.swift */,
+				6924127F28D8EBED002E2212 /* SettingsView.swift */,
+				6924128228D8FDC5002E2212 /* TimeIntervalPicker.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -244,6 +255,7 @@
 				69DEAB1D287C691000410576 /* ContentView.swift */,
 				69DEAB1E287C691200410576 /* Assets.xcassets */,
 				696F5B7328837C78004CE108 /* TextFileManager.swift */,
+				6924127C28D8E7B3002E2212 /* Config.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -472,6 +484,7 @@
 				697D8C0028C7ED8300DA8651 /* CardioTagDao.swift in Sources */,
 				69D126A8289EE48500C7DCA9 /* WorkoutDaoView.swift in Sources */,
 				69CAB90028C15F84005ABD66 /* ProfileViews.swift in Sources */,
+				6924128328D8FDC5002E2212 /* TimeIntervalPicker.swift in Sources */,
 				697D8BF628C7D71300DA8651 /* IdentifiableLabel.swift in Sources */,
 				697D8C0A28C7FD8F00DA8651 /* WeightliftingSet.swift in Sources */,
 				69A3F9F428CA8A4D00410632 /* Session.swift in Sources */,
@@ -481,10 +494,12 @@
 				69DEAB44287C691200410576 /* GainBrainApp.swift in Sources */,
 				697D8BFC28C7EC2400DA8651 /* CardioDao.swift in Sources */,
 				6966E5A828D1329E00B44315 /* DateExtension.swift in Sources */,
+				6924127D28D8E7B3002E2212 /* Config.swift in Sources */,
 				697D8C0828C7FCF900DA8651 /* WeightliftingSetDao.swift in Sources */,
 				69DEAB5C287C6A9300410576 /* WorkoutDTO.swift in Sources */,
 				697D8BFE28C7EC5B00DA8651 /* CardioTypeDao.swift in Sources */,
 				691BB7EF28C6B06A00B2A77E /* User.swift in Sources */,
+				6924128028D8EBED002E2212 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,6 +511,8 @@
 				694BA3C92881B47A00F73E01 /* CardioDTO.swift in Sources */,
 				69CAB8FB28C15E64005ABD66 /* CardioViews.swift in Sources */,
 				69C33F012881B9BC000CFFED /* CodableColor.swift in Sources */,
+				6924127E28D8E7B3002E2212 /* Config.swift in Sources */,
+				6924128128D8EBED002E2212 /* SettingsView.swift in Sources */,
 				69DEAB47287C691200410576 /* ContentView.swift in Sources */,
 				699ED6892880E9AB00C47D6E /* EditWorkoutViews.swift in Sources */,
 				69CAB8FE28C15EB1005ABD66 /* WeightliftingViews.swift in Sources */,
@@ -507,6 +524,7 @@
 				69CAB90128C15F84005ABD66 /* ProfileViews.swift in Sources */,
 				694BA3C62881B46D00F73E01 /* WeightliftingDTO.swift in Sources */,
 				69DEAB45287C691200410576 /* GainBrainApp.swift in Sources */,
+				6924128428D8FDC5002E2212 /* TimeIntervalPicker.swift in Sources */,
 				69FF5C7328D3D1EA00C57983 /* WorkoutLogView.swift in Sources */,
 				696EB4C228D3A1E700915563 /* Database.swift in Sources */,
 				69DEAB5D287C6A9300410576 /* WorkoutDTO.swift in Sources */,

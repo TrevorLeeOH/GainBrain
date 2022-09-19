@@ -13,6 +13,7 @@ struct CardioMinimalView: View {
     @Binding var refresh: Bool
     
     var body: some View {
+        
         HStack {
             Text(cardio.cardioType.name)
             Spacer()
@@ -20,31 +21,36 @@ struct CardioMinimalView: View {
             if let duration = cardio.duration {
                 VStack {
                     Text("dur.")
-                    Text(String(duration))
+                    Text(TimeIntervalClass(timeInterval: duration).toShortString())
+                        .font(.caption)
                 }
             }
             if let distance = cardio.distance {
                 VStack {
                     Text("dst.")
-                    Text(String(distance))
+                    Text(Config.instance.metricDistances ? String(round(distance.milesToKilometers() * 10) / 10.0).prefix(5) + " km" : String(round(distance * 10) / 10.0).prefix(5) + " mi")
+                        .font(.caption)
                 }
             }
             if let speed = cardio.speed {
                 VStack {
                     Text("spd.")
-                    Text(String(speed))
+                    Text(Config.instance.metricDistances ? String(round(speed.milesToKilometers() * 10) / 10.0).prefix(5) + " km/h" : String(round(speed * 10) / 10.0).prefix(5) + " mph")
+                        .font(.caption)
                 }
             }
             if let resistance = cardio.resistance {
                 VStack {
                     Text("res.")
-                    Text(String(resistance))
+                    Text(String(resistance).prefix(5))
+                        .font(.caption)
                 }
             }
             if let incline = cardio.incline {
                 VStack {
                     Text("inc.")
-                    Text(String(incline))
+                    Text(String(incline).prefix(5))
+                        .font(.caption)
                 }
             }
         }
@@ -60,10 +66,10 @@ struct CardioDetailView: View {
                 Text("Duration: " + String(duration))
             }
             if let distance = cardio.distance {
-                Text("Distance: " + String(distance))
+                Text(Config.instance.metricDistances ? "\(distance.milesToKilometers()) km" : "\(distance) mi")
             }
             if let speed = cardio.speed {
-                Text("Speed: " + String(speed))
+                Text(Config.instance.metricDistances ? "\(speed.milesToKilometers()) km/h" : "\(speed) mph")
             }
             if let resistance = cardio.resistance {
                 Text("Resistance: " + String(resistance))
@@ -81,6 +87,11 @@ struct EditCardioView: View {
     @EnvironmentObject var workout: WorkoutDTO
     
     @ObservedObject var cardio: CardioDTO
+    
+    @StateObject var timeInterval: TimeIntervalClass = TimeIntervalClass()
+    @State var distance: Double?
+    @State var speed: Double?
+    
             
     var body: some View {
         Form {
@@ -106,9 +117,15 @@ struct EditCardioView: View {
                 }
             }
             
-            TextField("Duration", value: $cardio.duration, format: .number)
-            TextField("Distance", value: $cardio.distance, format: .number)
-            TextField("Speed", value: $cardio.speed, format: .number)
+            TimeIntervalPicker(timeInterval: timeInterval)
+                .onAppear {
+                    timeInterval.setTimeInterval(timeInterval: cardio.duration ?? 0)
+                    distance = Config.instance.metricDistances ? cardio.distance?.milesToKilometers() : cardio.distance
+                    speed = Config.instance.metricDistances ? cardio.speed?.milesToKilometers() : cardio.speed
+                }
+            
+            TextField(Config.instance.metricDistances ? "Distance (kilometers)" : "Distance (miles)", value: $distance, format: .number)
+            TextField(Config.instance.metricDistances ? "Speed (km/h)" : "Speed (mph)", value: $speed, format: .number)
             TextField("Resistance", value: $cardio.resistance, format: .number)
             TextField("Incline", value: $cardio.incline, format: .number)
         }
@@ -116,6 +133,9 @@ struct EditCardioView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if cardio.cardioType.id != -1 {
                     Button("Save Changes") {
+                        cardio.duration = timeInterval.toTimeInterval() <= 0.0 ? nil : timeInterval.toTimeInterval()
+                        cardio.distance = Config.instance.metricDistances ? distance?.kilometersToMiles() : distance
+                        cardio.speed = Config.instance.metricDistances ? speed?.kilometersToMiles() : speed
                         do {
                             if cardio.cardioId == -1 {
                                 let newC = try CardioDao.create(cardio: cardio)
@@ -129,7 +149,6 @@ struct EditCardioView: View {
                                         break
                                     }
                                 }
-                                
                             }
                             dismiss()
                         } catch {
@@ -157,79 +176,6 @@ struct EditCardioView: View {
         }
     }
 }
-
-
-//struct CardioTypePickerView: View {
-//    @Environment(\.dismiss) var dismiss
-//
-//    @State var options: [IdentifiableLabel] = []
-//
-//    @Binding var selection: IdentifiableLabel
-//
-//    @State var filter: String = ""
-//
-//    @State private var sheetIsActive: Bool = false
-//
-//    @State private var deleteConfirmation: Bool = false
-//
-//    private func loadOptions() {
-//        options = CardioTypeDao.getAll()
-//    }
-//
-//
-//    var body: some View {
-//        List {
-//            Section {
-//                HStack {
-//                    Image(systemName: "magnifyingglass").opacity(0.3)
-//                    TextField("Filter", text: $filter)
-//                }
-//            }
-//
-//            ForEach(options, id: \.id) { option in
-//                if filter == "" || option.name.lowercased().contains(filter.lowercased()) {
-//                    Button(option.name) {
-//                        selection = option
-//                        dismiss()
-//                    }
-//                }
-//            }
-//            .onDelete { indexSet in
-//                selection = options[indexSet.first!]
-//                deleteConfirmation = true
-//            }
-//        }
-//        .navigationBarTitleDisplayMode(.inline)
-//        .toolbar {
-//            ToolbarItem(placement: .navigationBarTrailing) {
-//                Button("Create") {
-//                    sheetIsActive = true
-//                }
-//            }
-//            ToolbarItem(placement: .navigationBarTrailing) { EditButton() }
-//        }
-//        .onAppear { loadOptions() }
-//        .sheet(isPresented: $sheetIsActive) { loadOptions() } content: {
-//            IdentifiableLabelCreateView(isActive: $sheetIsActive, create: CardioTypeDao.create)
-//        }
-//        .alert("Confirm Delete", isPresented: $deleteConfirmation) {
-//            Button("Delete Cardio Type", role: .destructive) {
-//                do {
-//                    try CardioTypeDao.delete(id: selection.id)
-//                    print("deleted cardio type")
-//                    selection = IdentifiableLabel()
-//                    loadOptions()
-//                } catch {
-//                    print(error.localizedDescription)
-//                }
-//            }
-//        } message: {
-//            Text("Warning: Cardio Type will only be deleted if no workouts depend on it.")
-//        }
-//    }
-//}
-
-
 
 
 
