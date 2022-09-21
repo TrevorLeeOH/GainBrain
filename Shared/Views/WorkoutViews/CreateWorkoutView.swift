@@ -44,11 +44,12 @@ struct CreateWorkoutView: View {
                     Button("Let's Do This!") {
                         do {
                             let _ = try SessionDao.createSession(users: selectedUsers, workoutType: type)
+                            UINavigationBar.setAnimationsEnabled(false)
                             dismiss()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                UINavigationBar.setAnimationsEnabled(true)
                                 parentNavSwitch = "CREATE_WORKOUT"
                             }
-                            
                         } catch {
                             print(error.localizedDescription)
                         }

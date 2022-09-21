@@ -93,25 +93,16 @@ struct MainMenuItemView: SwiftUI.View {
 
 
 struct DebugView: SwiftUI.View {
-    @State var value: Int64 = -1
-    
-    @State var selection: [IdentifiableLabel] = []
-    
     
     var body: some SwiftUI.View {
         
         VStack {
             
-            TextField("enter value", value: $value, format: .number)
             
             
-            Button("test rounding") {
-                print("\(1.23456) text")
-                print("\(round(1.23456 * 100) / 100.0) text")
+            NavigationLink(destination: DismissDebugView()) {
+                Text("Dismiss debug view")
             }
-            
-            Text("\(1.23456) text")
-            Text(String(round(1.23456 * 100) / 100.0))
             
             
             Button("Init Database") {
@@ -128,7 +119,7 @@ struct DebugView: SwiftUI.View {
             }
             
             Button("Print Workouts") {
-                let workouts = WorkoutDao.getAllForUser(userId: value)
+                let workouts = WorkoutDao.getAllForUser(userId: 1)
                 
                 for w in workouts {
                     print(w.toString())
@@ -162,100 +153,46 @@ struct DebugView: SwiftUI.View {
 }
 
 
-struct dismissDebugView: View {
-    
+struct DismissDebugView: View {
     
     var body: some View {
-        
+        VStack {
+            Text("DismissDebugView")
+                .font(.largeTitle)
             NavigationLink(destination: Debuggeronie()) {
                 Text("debuggerionie")
             }
-        
-        
-        
-        
-        
+        }
         
     }
 }
 
 
 struct Debuggeronie: View {
-    
+    @Environment(\.dismiss) var dismiss
     
     @State private var showAlert: Bool = false
     
+    
     var body: some View {
         VStack {
-            Button("Debug") {
-                showAlert = true
-            }
-
-        }
-        .alert("Are You Sure?", isPresented: $showAlert) {
-            Button("Delete", role: .destructive) {
-                print("deleted")
-            }
-        } message: {
-            Text("Howdy doody")
-        }
-        
-    }
-}
-
-
-
-
-
-
-struct TempViewWorkoutView: SwiftUI.View {
-    
-    @State var workouts: [WorkoutDTO] = []
-    @State var selectedWorkout: WorkoutDTO?
-    @State var editingWorkout: Bool = false
-    
-    private func doNothing(user: User) {
-        
-    }
-    
-    var body: some SwiftUI.View {
-        Group {
-            if let workout = selectedWorkout {
-                NavigationLink(destination: WorkoutBuilderView(inSession: false, removeProfile: doNothing).environmentObject(workout).navigationBarTitleDisplayMode(.inline), isActive: $editingWorkout) {
-                    EmptyView()
-                }
-            }
-            
-            List {
-                ForEach(workouts, id: \.workoutId) { w in
-                    Button {
-                        selectedWorkout = w
-                        editingWorkout = true
-                    } label: {
-                        WorkoutMinimalView(workout: w)
-                        
-                    }
-                    
-                    
-                    
+            Text("Dubuggeronie")
+                .font(.largeTitle)
+            Button("dismiss view") {
+                UINavigationBar.setAnimationsEnabled(false)
+                dismiss()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    UINavigationBar.setAnimationsEnabled(true)
                 }
                 
             }
-            .frame(height: 300)
-            
-            
-            .onAppear {
-                workouts = []
-                let users = UserDao.getAll()
-                for user in users {
-                    let userWorkouts = WorkoutDao.getAllForUser(userId: user.userId)
-                    workouts.append(contentsOf: userWorkouts)
-                }
-            }
+
         }
-        
-        
         
     }
 }
+
+
+
+
 

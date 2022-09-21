@@ -71,7 +71,7 @@ struct WorkoutBuilderView: View {
     var body: some View {
         VStack(spacing: 0.0) {
             
-            NavigationLink(destination: EditWeightliftingView(weightlifting: weightliftingTemplate).environmentObject(workout), tag: "EDIT_WEIGHTLIFTING", selection: $navigationSwitch) { EmptyView() }
+            NavigationLink(destination: WeightliftingEditor(weightlifting: weightliftingTemplate).environmentObject(workout), tag: "EDIT_WEIGHTLIFTING", selection: $navigationSwitch) { EmptyView() }
             NavigationLink(destination: EditCardioView(cardio: cardioTemplate).environmentObject(workout), tag: "EDIT_CARDIO", selection: $navigationSwitch) { EmptyView() }
             NavigationLink(destination: EditWorkoutPropertiesView().environmentObject(workout), tag: "EDIT_WORKOUT", selection: $navigationSwitch) { EmptyView() }
             
@@ -111,7 +111,7 @@ struct WorkoutBuilderView: View {
                                 weightliftingTemplate = wl.duplicate()
                                 navigationSwitch = "EDIT_WEIGHTLIFTING"
                             } label: {
-                                WeightLiftingMinimalView(weightLifting: wl, refresh: $refresh)
+                                WeightliftingMinimalView(weightlifting: wl, refresh: $refresh)
                             }
                         }
                         Button {

@@ -62,8 +62,6 @@ struct WorkoutLogView: View {
         }
     }
     
-    private func doNothing(user: User) {}
-    
     var body: some View {
         VStack {
             
@@ -96,7 +94,7 @@ struct WorkoutLogView: View {
             }
             List {
                 ForEach(filteredWorkouts, id: \.workoutId) { w in
-                    NavigationLink(destination: WorkoutBuilderView(inSession: false, removeProfile: doNothing).environmentObject(w)) {
+                    NavigationLink(destination: WorkoutDetailedView(workout: w).navigationBarTitleDisplayMode(.inline)) {
                         WorkoutMinimalView(workout: w)
                     }
                     
