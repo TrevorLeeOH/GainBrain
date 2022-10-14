@@ -26,9 +26,6 @@ struct IdentifiableLabelPickerView: View {
     
     var body: some View {
         List {
-            Button("Debug") {
-                deleteConfirmation = true
-            }
             Section {
                 HStack {
                     Image(systemName: "magnifyingglass").opacity(0.3)

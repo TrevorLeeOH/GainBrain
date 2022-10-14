@@ -57,7 +57,7 @@ class WorkoutDao {
         
         do {
             let db = try Database.getDatabase()
-            let rowSet = try db.prepareRowIterator(table.filter(self.userId == userId))
+            let rowSet = try db.prepareRowIterator(table.filter(self.userId == userId).order(date.asc))
             for row in try Array(rowSet) {
                 try workouts.append(mapRowToWorkoutDTO(row: row))
             }

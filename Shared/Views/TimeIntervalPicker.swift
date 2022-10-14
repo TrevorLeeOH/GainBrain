@@ -28,7 +28,6 @@ struct TimeIntervalPicker: View {
                 Text("Seconds")
                     .font(.caption)
                 TextField("Seconds", value: $timeInterval.seconds, format: .number)
-                    
             }
         }
         .multilineTextAlignment(.center)

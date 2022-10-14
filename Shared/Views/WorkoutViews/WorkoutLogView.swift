@@ -11,18 +11,23 @@ import SwiftUI
 struct WorkoutLogProfilePickerView: View {
     
     @State var users: [User] = []
+    @State var selection: User?
     @State var workouts: [WorkoutDTO] = []
-    @State var showWorkoutLogView: Bool = false
+    @State var showWorkoutLogMenu: Bool = false
     
     var body: some View {
         Group {
-            NavigationLink(destination: WorkoutLogView(workouts: workouts), isActive: $showWorkoutLogView) { EmptyView() }
+            if let user = selection {
+                NavigationLink(destination: WorkoutLogMenu(user: user, workouts: workouts), isActive: $showWorkoutLogMenu) {EmptyView()}
+            }
+            
             
             List {
                 ForEach(users, id: \.userId) { user in
                     Button(user.name) {
+                        selection = user
+                        showWorkoutLogMenu = true
                         workouts = WorkoutDao.getAllForUser(userId: user.userId)
-                        showWorkoutLogView = true
                     }
                     .foregroundColor(user.getColor())
                 }
@@ -34,6 +39,83 @@ struct WorkoutLogProfilePickerView: View {
         
     }
 }
+
+struct WorkoutLogMenu: View {
+    
+    var user: User
+    var workouts: [WorkoutDTO]
+    
+    @State var workoutsPerWeek: Double = 0.0
+    @State var workoutHistoryRange: String = "last 2 weeks"
+    
+    func switchWorkoutHistoryRange() {
+        if workoutHistoryRange == "all-time" {
+            let workoutCount = workouts.filter { w in
+                return w.date.distance(to: Date.now) <= 2592000
+            }.count
+            workoutsPerWeek = Double(workoutCount) * (7.0 / 30.0)
+            workoutHistoryRange = "last 30 days"
+        } else if workoutHistoryRange == "last 30 days" {
+            let workoutCount = workouts.filter { w in
+                return w.date.distance(to: Date.now) <= 604800 * 2.0
+            }.count
+            workoutsPerWeek = Double(workoutCount) / 2.0
+            workoutHistoryRange = "last 2 weeks"
+        } else {
+            let numberOfWeeks = workouts.first!.date.distance(to: workouts.last!.date) / 604800.0
+            workoutsPerWeek = Double(workouts.count) / numberOfWeeks
+            workoutHistoryRange = "all-time"
+        }
+    }
+    
+    
+    var body: some View {
+        List {
+            if !workouts.isEmpty {
+                Button {
+                    switchWorkoutHistoryRange()
+                } label: {
+                    HStack(spacing: 0.0) {
+                        Text("Workouts Per Week (\(workoutHistoryRange)): ")
+                            .font(.caption)
+                        
+                        Spacer()
+                        if workoutsPerWeek < 1 {
+                            Text("<1")
+                        } else if Int(workoutsPerWeek) == Int(ceil(workoutsPerWeek)) {
+                            Text(String(Int(workoutsPerWeek)))
+                        } else {
+                            Text("\(Int(workoutsPerWeek))-\(Int(ceil(workoutsPerWeek)))")
+                        }
+                        
+                    }
+                }
+                
+                VStack {
+                    Text("Last Workout:")
+                    WorkoutMinimalView(workout: workouts.last!)
+                }
+            }
+            
+            
+            
+            
+            NavigationLink(destination: WorkoutLogView(workouts: workouts)) {
+                Text("View Workout History")
+                    .foregroundColor(.accentColor)
+            }
+            Button("View Exercise Statistics") {
+                
+            }
+        }
+        .navigationTitle(user.name)
+        .onAppear {
+            switchWorkoutHistoryRange()
+        }
+    }
+}
+
+
 
 struct WorkoutLogView: View {
     

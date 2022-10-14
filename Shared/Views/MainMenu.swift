@@ -171,24 +171,24 @@ struct DismissDebugView: View {
 struct Debuggeronie: View {
     @Environment(\.dismiss) var dismiss
     
-    @State private var showAlert: Bool = false
+    @State private var wls: [WeightliftingDTO] = []
+    
+    @State private var refresh: Bool = false
     
     
     var body: some View {
-        VStack {
-            Text("Dubuggeronie")
-                .font(.largeTitle)
-            Button("dismiss view") {
-                UINavigationBar.setAnimationsEnabled(false)
-                dismiss()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    UINavigationBar.setAnimationsEnabled(true)
-                }
-                
+        List {
+            ForEach(wls, id: \.weightliftingId) { wl in
+                WeightliftingMinimalView(weightlifting: wl, refresh: $refresh)
             }
-
         }
-        
+        .onAppear {
+            do {
+                try wls = WeightliftingDao.getAllFiltered(userId: 1, weightliftingType: WeightliftingTypeDao.get(id: 1))
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 

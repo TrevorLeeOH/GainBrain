@@ -64,6 +64,25 @@ class WeightliftingDao {
         return wls
     }
     
+    static func getAllFiltered(userId: Int64, weightliftingType: IdentifiableLabel) -> [WeightliftingDTO] {
+        var wls: [WeightliftingDTO] = []
+
+        do {
+            let db = try Database.getDatabase()
+
+            let filteredTable = table
+                .join(WorkoutDao.table.select(WorkoutDao.userId), on: WorkoutDao.table[workoutId] == table[workoutId])
+                .filter(WorkoutDao.userId == userId)
+                .filter(weightliftingTypeId == weightliftingType.id)
+
+            let rowSet = try db.prepareRowIterator(filteredTable)
+            for row in try Array(rowSet) {
+                try wls.append(mapRowToWeightliftingDTO(row: row))
+            }
+        } catch {}
+        return wls
+    }
+    
     static func update(wl: WeightliftingDTO) throws -> WeightliftingDTO {
         do {
             let db = try Database.getDatabase()
