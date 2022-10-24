@@ -64,7 +64,6 @@ struct WorkoutBuilderView: View {
     @State private var showDeleteConfirmation: Bool = false
     
     private func loadExercises() {
-        print("refreshed")
         refresh.toggle()
     }
     
@@ -72,8 +71,8 @@ struct WorkoutBuilderView: View {
         VStack(spacing: 0.0) {
             
             NavigationLink(destination: WeightliftingEditor(weightlifting: weightliftingTemplate).environmentObject(workout), tag: "EDIT_WEIGHTLIFTING", selection: $navigationSwitch) { EmptyView() }
-            NavigationLink(destination: EditCardioView(cardio: cardioTemplate).environmentObject(workout), tag: "EDIT_CARDIO", selection: $navigationSwitch) { EmptyView() }
-            NavigationLink(destination: EditWorkoutPropertiesView().environmentObject(workout), tag: "EDIT_WORKOUT", selection: $navigationSwitch) { EmptyView() }
+            NavigationLink(destination: CardioEditor(cardio: cardioTemplate).environmentObject(workout), tag: "EDIT_CARDIO", selection: $navigationSwitch) { EmptyView() }
+            NavigationLink(destination: EditWorkoutPropertiesView(inSession: inSession).environmentObject(workout), tag: "EDIT_WORKOUT", selection: $navigationSwitch) { EmptyView() }
             
             
             VStack(spacing: 0.0) {
@@ -214,12 +213,41 @@ struct EditWorkoutPropertiesView: View {
     @State var notes: String = ""
     @State var caloriesBurned: Int?
     @State var date: Date = Date.now
-    @StateObject var duration: TimeIntervalClass = TimeIntervalClass()
+    @State var duration: TimeIntervalClass = TimeIntervalClass()
     @State var showAlert: Bool = false
+    
+    var inSession: Bool
+    
+    
+    private func saveChanges() {
+        let workoutToSave = workout.duplicate()
+        workoutToSave.workoutType = workoutType
+        workoutToSave.notes = notes
+        workoutToSave.caloriesBurned = caloriesBurned
+        workoutToSave.date = date
+        if duration.toTimeInterval() != 0.0 {
+            workoutToSave.duration = duration.toTimeInterval()
+        }
+        do {
+            let updatedWorkout = try WorkoutDao.update(workout: workoutToSave)
+            workout.workoutType = updatedWorkout.workoutType
+            workout.notes = updatedWorkout.notes
+            workout.caloriesBurned = updatedWorkout.caloriesBurned
+            workout.date = updatedWorkout.date
+            if updatedWorkout.duration != 0.0 {
+                workout.duration = updatedWorkout.duration
+            }
+            dismiss()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     
     var body: some View {
         Form {
-            
+            Button("Print duration") {
+                print(workout.duration)
+            }
             
             NavigationLink(destination: IdentifiableLabelPickerView(selection: $workoutType, getAllFunction: WorkoutTypeDao.getAll, createFunction: WorkoutTypeDao.create, deleteFunction: WorkoutTypeDao.delete, warning: "Warning: Workout Type will only be deleted if no Workouts depend on it.")) {
                 HStack {
@@ -231,10 +259,11 @@ struct EditWorkoutPropertiesView: View {
             }
             
             TextField("Calories Burned", value: $caloriesBurned, format: .number)
+                .keyboardType(.numberPad)
             
             
             DatePicker("Date/Time", selection: $date, displayedComponents: [.date, .hourAndMinute])
-            TimeIntervalPicker(timeInterval: duration)
+            TimeIntervalPicker(timeInterval: $duration)
             
             Section(header: Text("Notes")) {
                 TextEditor(text: $notes)
@@ -248,7 +277,11 @@ struct EditWorkoutPropertiesView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 if workoutType.id != -1 {
                     Button("Save Changes") {
-                        showAlert = true
+                        if inSession {
+                            showAlert = true
+                        } else {
+                            saveChanges()
+                        }
                     }
                 }
             }
@@ -259,34 +292,12 @@ struct EditWorkoutPropertiesView: View {
             caloriesBurned = workout.caloriesBurned
             date = workout.date
             if workout.duration != 0.0 {
-                duration.hours = Int(workout.duration / 3600.0)
-                duration.minutes = Int(workout.duration / 60.0)
-                duration.seconds = Int(workout.duration / 3600.0)
+                duration = TimeIntervalClass(timeInterval: workout.duration)
             }
         }
         .alert("Caution", isPresented: $showAlert) {
             Button("Save Changes", role: .destructive) {
-                let workoutToSave = workout.duplicate()
-                workoutToSave.workoutType = workoutType
-                workoutToSave.notes = notes
-                workoutToSave.caloriesBurned = caloriesBurned
-                workoutToSave.date = date
-                if workout.duration != 0.0 {
-                    workoutToSave.duration = duration.toTimeInterval()
-                }
-                do {
-                    try WorkoutDao.update(workout: workoutToSave)
-                    workout.workoutType = workoutType
-                    workout.notes = notes
-                    workout.caloriesBurned = caloriesBurned
-                    workout.date = date
-                    if workout.duration != 0.0 {
-                        workout.duration = duration.toTimeInterval()
-                    }
-                    dismiss()
-                } catch {
-                    print(error.localizedDescription)
-                }
+                saveChanges()
             }
         } message: {
             Text("Duration is automatically set upon finishing a workout. Editing the duration here will override that process.")
@@ -313,6 +324,7 @@ struct FinishWorkoutView: View {
                 }
                 Section(header: Text("Calories Burned")) {
                     TextField("", value: $caloriesBurned, format: .number)
+                        .keyboardType(.numberPad)
                 }
             }
             HStack {
@@ -328,7 +340,7 @@ struct FinishWorkoutView: View {
                         workout.duration = workout.date.distance(to: Date.now)
                     }
                     do {
-                        try WorkoutDao.update(workout: workout)
+                        let _ = try WorkoutDao.update(workout: workout)
                         isPresented = false
                         removeProfile(workout.user)
                     } catch {

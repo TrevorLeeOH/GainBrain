@@ -44,7 +44,7 @@ struct MainMenu: SwiftUI.View {
                     
                     MainMenuItemView(view: AnyView(
                         NavigationLink(destination: WorkoutLogProfilePickerView().navigationTitle("Select Profile"), label: {
-                            Text("View Workouts")
+                            Text("Log")
                         })
                     ))
                     
@@ -100,8 +100,8 @@ struct DebugView: SwiftUI.View {
             
             
             
-            NavigationLink(destination: DismissDebugView()) {
-                Text("Dismiss debug view")
+            NavigationLink(destination: CalendarDebugView(dayRange: Calendar.current.range(of: .day, in: .month, for: Date.now)!)) {
+                Text("Calendar debug view")
             }
             
             
@@ -153,15 +153,92 @@ struct DebugView: SwiftUI.View {
 }
 
 
-struct DismissDebugView: View {
+struct CalendarDebugView: View {
+    @State var currentDate: Date = Date.now
+    @State var calendar: Calendar = Calendar(identifier: .gregorian)
+    @State var workouts: [WorkoutDTO] = []
+    var dayRange: Range<Int>
+    @State var leadingSpace: Int = 0
+    
+    
+    @State var dayBoxSize: CGFloat = 35.0
+    
+    @State var selectedMonth: Date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: Calendar.current.startOfDay(for: Date.now)))!
+    
+    
+    
+    
     
     var body: some View {
         VStack {
-            Text("DismissDebugView")
-                .font(.largeTitle)
-            NavigationLink(destination: Debuggeronie()) {
-                Text("debuggerionie")
+            
+            
+            
+            Button("Print info") {
+                print(Calendar.current.firstWeekday)
+                print(Calendar.current.minimumDaysInFirstWeek)
             }
+            
+            
+            
+            HStack {
+                Button {
+                    
+                    let index = Calendar.current.component(.weekday, from: selectedMonth) // this returns an Int
+                    leadingSpace = index - 1
+                } label: {
+                    Image(systemName: "arrow.left")
+                }
+                
+                Text(Calendar.current.component(.month, from: selectedMonth).description)
+                
+                Button {
+                    let index = Calendar.current.component(.weekday, from: selectedMonth) // this returns an Int
+                    leadingSpace = index - 1
+                } label: {
+                    Image(systemName: "arrow.right")
+                }
+            }
+            
+            
+            GeometryReader { geo in
+                let size = geo.frame(in: .local).width / 7.0
+                
+                let columns: [GridItem] = Array(repeating: GridItem(.fixed(size), spacing: 0.0), count: 7)
+                
+                LazyVGrid(columns: columns, spacing: 0.0) {
+                    
+                    
+                    ForEach(0..<7) { num in
+                        Text(Calendar.current.weekdaySymbols[num].prefix(3))
+                            .font(.system(size: size / 4.0))
+                            .frame(width: size)
+                    }
+                    
+                    ForEach(Array(repeating: true, count: leadingSpace).indices, id: \.self) { _ in
+                        Text("")
+                            .frame(width: size, height: size)
+                            
+                    }
+                    
+                    ForEach(dayRange) { num in
+                        Text(String(num))
+                            .font(.system(size: size / 2.0))
+                            .frame(width: size, height: size)
+                            .border(.blue)
+                    }
+                }
+            }
+            
+            
+            
+        }
+        .onAppear {
+            workouts = WorkoutDao.getAllForUser(userId: 1)
+            
+            
+            //Calendar.current.weekdaySymbols[index - 1] // subtract 1 since the index starts at 1
+            
         }
         
     }

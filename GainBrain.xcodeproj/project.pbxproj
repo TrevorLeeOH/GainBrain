@@ -53,6 +53,10 @@
 		699ED6882880E9AB00C47D6E /* EditWorkoutViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699ED6872880E9AB00C47D6E /* EditWorkoutViews.swift */; };
 		699ED6892880E9AB00C47D6E /* EditWorkoutViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699ED6872880E9AB00C47D6E /* EditWorkoutViews.swift */; };
 		69A3F9F428CA8A4D00410632 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A3F9F328CA8A4D00410632 /* Session.swift */; };
+		69B0A69D2906FBD0004E6FC2 /* CardioMinimalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B0A69C2906FBD0004E6FC2 /* CardioMinimalView.swift */; };
+		69B0A69E2906FBD0004E6FC2 /* CardioMinimalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B0A69C2906FBD0004E6FC2 /* CardioMinimalView.swift */; };
+		69B0A6A02906FC0F004E6FC2 /* CardioEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B0A69F2906FC0F004E6FC2 /* CardioEditor.swift */; };
+		69B0A6A12906FC0F004E6FC2 /* CardioEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B0A69F2906FC0F004E6FC2 /* CardioEditor.swift */; };
 		69C33F002881B9BC000CFFED /* CodableColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C33EFF2881B9BC000CFFED /* CodableColor.swift */; };
 		69C33F012881B9BC000CFFED /* CodableColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C33EFF2881B9BC000CFFED /* CodableColor.swift */; };
 		69C8B4FF28CE8081001BAC6B /* IdentifiableLabelViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C8B4FE28CE8081001BAC6B /* IdentifiableLabelViews.swift */; };
@@ -135,6 +139,8 @@
 		698CC75628DBC82C0065B5D9 /* WeightliftingSetEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightliftingSetEditor.swift; sourceTree = "<group>"; };
 		699ED6872880E9AB00C47D6E /* EditWorkoutViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditWorkoutViews.swift; sourceTree = "<group>"; };
 		69A3F9F328CA8A4D00410632 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		69B0A69C2906FBD0004E6FC2 /* CardioMinimalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardioMinimalView.swift; sourceTree = "<group>"; };
+		69B0A69F2906FC0F004E6FC2 /* CardioEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardioEditor.swift; sourceTree = "<group>"; };
 		69C33EFF2881B9BC000CFFED /* CodableColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableColor.swift; sourceTree = "<group>"; };
 		69C8B4FE28CE8081001BAC6B /* IdentifiableLabelViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableLabelViews.swift; sourceTree = "<group>"; };
 		69CAB8F928C15E64005ABD66 /* CardioViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardioViews.swift; sourceTree = "<group>"; };
@@ -247,6 +253,8 @@
 			isa = PBXGroup;
 			children = (
 				69CAB8F928C15E64005ABD66 /* CardioViews.swift */,
+				69B0A69C2906FBD0004E6FC2 /* CardioMinimalView.swift */,
+				69B0A69F2906FC0F004E6FC2 /* CardioEditor.swift */,
 			);
 			path = CardioViews;
 			sourceTree = "<group>";
@@ -516,6 +524,8 @@
 				697D8C0428C7FB0C00DA8651 /* WeightliftingTagDao.swift in Sources */,
 				69C33F002881B9BC000CFFED /* CodableColor.swift in Sources */,
 				69DEAB46287C691200410576 /* ContentView.swift in Sources */,
+				69B0A69D2906FBD0004E6FC2 /* CardioMinimalView.swift in Sources */,
+				69B0A6A02906FC0F004E6FC2 /* CardioEditor.swift in Sources */,
 				699ED6882880E9AB00C47D6E /* EditWorkoutViews.swift in Sources */,
 				692CFB3E28DE4062006A64B4 /* ExerciseStatisticsView.swift in Sources */,
 				695FE6EF287DAC3A00966B97 /* WorkoutDao.swift in Sources */,
@@ -562,11 +572,13 @@
 				69C33F012881B9BC000CFFED /* CodableColor.swift in Sources */,
 				6924127E28D8E7B3002E2212 /* Config.swift in Sources */,
 				6924128128D8EBED002E2212 /* SettingsView.swift in Sources */,
+				69B0A6A12906FC0F004E6FC2 /* CardioEditor.swift in Sources */,
 				69DEAB47287C691200410576 /* ContentView.swift in Sources */,
 				699ED6892880E9AB00C47D6E /* EditWorkoutViews.swift in Sources */,
 				6920FD9128E3554600E2645F /* DateInterval.swift in Sources */,
 				698CC75528DBC7DC0065B5D9 /* WeightliftingEditor.swift in Sources */,
 				698CC74C28DBB8600065B5D9 /* WorkoutDetailedView.swift in Sources */,
+				69B0A69E2906FBD0004E6FC2 /* CardioMinimalView.swift in Sources */,
 				69C8B50028CE8081001BAC6B /* IdentifiableLabelViews.swift in Sources */,
 				698CC75228DBC7470065B5D9 /* WeightliftingMinimalView.swift in Sources */,
 				69DEAB5A287C69BB00410576 /* MainMenu.swift in Sources */,

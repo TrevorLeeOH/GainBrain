@@ -39,7 +39,6 @@ class WorkoutDao {
     }
     
     static func get(workoutId: Int64) throws -> WorkoutDTO {
-        print("called get with id of \(workoutId)")
         do {
             let db = try Database.getDatabase()
             let rowSet = try db.prepareRowIterator(table.filter(self.workoutId == workoutId))
@@ -67,7 +66,7 @@ class WorkoutDao {
     }
     
     //Only for workout table values -- does not update cardio or weightlifting
-    static func update(workout: WorkoutDTO) throws {
+    static func update(workout: WorkoutDTO) throws -> WorkoutDTO {
         do {
             let db = try Database.getDatabase()
             let targetRow = table.filter(workoutId == workout.workoutId)
@@ -76,6 +75,7 @@ class WorkoutDao {
                                         duration <- workout.duration,
                                         caloriesBurned <- workout.caloriesBurned,
                                         notes <- workout.notes))
+            return try get(workoutId: workout.workoutId)
         }
     }
     
